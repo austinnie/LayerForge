@@ -18,4 +18,4 @@ output/
 
 # OS 垃圾文件
 .DS_Store
-Thumbs.db
+Thumbs.db.model_config 
