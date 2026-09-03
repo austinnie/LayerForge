@@ -97,7 +97,13 @@ def list_available_models():
     found.sort(key=lambda x: x["name"])
     return found
 
-
+def detect_model_type(model_path: str) -> str:
+    """检测模型类型：sd15 / sdxl"""
+    model_path_lower = model_path.lower()
+    if "sdxl" in model_path_lower or "xl" in model_path_lower:
+        return "sdxl"
+    return "sd15"
+    
 def set_default_model(model_name: str) -> bool:
     models = list_available_models()
     if not models:
@@ -133,6 +139,10 @@ MODEL_PATH = find_model_path()
 # 如果自动检测失败，手动指定（取消注释并修改）：
 # if MODEL_PATH is None:
 #     MODEL_PATH = r"D:/SD_OpenVINO/models/sd-v1-5/anytimeRealistic_v10.safetensors"
+
+# 在 MODEL_PATH 确定后自动检测
+MODEL_TYPE = detect_model_type(MODEL_PATH) if MODEL_PATH else "sd15"
+MAX_TOKENS = 77 if MODEL_TYPE == "sd15" else 154  # SDXL 可以更多
 
 # ==================== 其他配置 ====================
 OUTPUT_DIR = "./output"

@@ -14,6 +14,8 @@ from core.composer import PromptComposer
 from core.generator import SDGenerator
 from config import (
     MODEL_PATH,
+    MODEL_TYPEv
+    MAX_TOKENS,
     OUTPUT_DIR,
     DEFAULT_STEPS,
     DEFAULT_CFG,
@@ -170,7 +172,8 @@ def main():
             prompts.append(composer.compose_random())
     else:
         for i in range(args.count):
-            prompts.append(composer.compose_by_index(i))
+            # ⭐ 传入 max_tokens
+            prompts.append(composer.compose_by_index(i, max_tokens=MAX_TOKENS))
 
     print("\n📝 生成的提示词:")
     for idx, p in enumerate(prompts):
