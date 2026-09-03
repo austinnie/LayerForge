@@ -14,7 +14,7 @@ from core.composer import PromptComposer
 from core.generator import SDGenerator
 from config import (
     MODEL_PATH,
-    MODEL_TYPEv
+    MODEL_TYPE,
     MAX_TOKENS,
     OUTPUT_DIR,
     DEFAULT_STEPS,

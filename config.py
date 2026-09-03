@@ -146,7 +146,7 @@ MAX_TOKENS = 77 if MODEL_TYPE == "sd15" else 154  # SDXL 可以更多
 
 # ==================== 其他配置 ====================
 OUTPUT_DIR = "./output"
-DEFAULT_STEPS = 25
+DEFAULT_STEPS = 15
 DEFAULT_CFG = 7.5
 DEFAULT_WIDTH = 512
 DEFAULT_HEIGHT = 768
