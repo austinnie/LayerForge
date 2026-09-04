@@ -13,6 +13,8 @@
 | **6 层提示词架构** | 主体 / 场景 / 风格 / 光影 / 视角 / 画质，层层可控 |
 | **预设风格库** | 内置 90+ 预设风格（机甲、国风、人像、素描等） |
 | **模型管理** | 自动检测本地模型，一键切换 SD1.5 / SDXL |
+| **LoRA 支持** | 加载 LoRA 增强风格，支持权重控制和默认设置 |
+| **智能缓存** | 模型和 LoRA 列表缓存，秒级响应 |
 | **灵活组合** | 支持索引轮询、完全随机两种组合模式 |
 | **轻量无依赖** | 纯 Python 实现，无 WebUI 复杂依赖 |
 
@@ -105,6 +107,28 @@ python cli.py -n 3 --preset tiger_sketch
 | `--list-models` | 列出所有本地模型 |
 | `--set-model NAME` | 切换默认模型（支持部分匹配） |
 
+
+#### LoRA 管理
+
+| 命令 | 说明 |
+|------|------|
+|`--list-loras`	|列出所有可用 LoRA 文件|
+|`--set-lora NAME@WEIGHT`	|设置默认 LoRA（如 --set-lora style@0.7）|
+|`--lora NAME@WEIGHT`	|临时加载 LoRA（可多次使用）|
+
+#### LoRA 使用示例：
+
+```bash
+# 设置默认 LoRA
+python cli.py --set-lora MechaGirlFigure_v1@0.7
+
+# 临时加载 LoRA（覆盖默认）
+python cli.py -n 1 --preset mecha_glow --lora eula_v2@0.6
+
+# 加载多个 LoRA
+python cli.py -n 1 --preset mecha_glow --lora style@0.6 --lora detail@0.4
+```
+
 #### 预设管理
 
 | 命令 | 说明 |
@@ -112,25 +136,27 @@ python cli.py -n 3 --preset tiger_sketch
 | `--list-presets` | 列出所有可用预设 |
 | `--preset NAME` | 使用指定预设 |
 
-#### 调试
+#### 调试与缓存
 
 | 命令 | 说明 |
 |------|------|
 | `--list-layers` | 查看各层配置和总组合数 |
-
+|`--refresh-cache`	|强制刷新缓存（添加新模型/LoRA 后使用）|
 
 📁 目录结构
 ```text
 LayerForge/
 ├── cli.py                 # 命令行入口
-├── config.py              # 全局配置（自动检测模型）
+├── config.py              # 全局配置（自动检测模型/LoRA）
 ├── requirements.txt       # 依赖清单
 ├── .model_config          # 用户选择的模型路径（自动生成）
+├── .lora_config           # 用户选择的默认 LoRA（自动生成）
+├── .cache.json            # 模型/LoRA 缓存（自动生成）
 │
 ├── core/                  # 核心引擎
 │   ├── loader.py          # 动态加载 6 层
-│   ├── composer.py        # 6 层组合器
-│   └── generator.py       # SD 生成后端
+│   ├── composer.py        # 6 层组合器（含智能 token 截断）
+│   └── generator.py       # SD 生成后端（含 LoRA 加载）
 │
 ├── layers/                # 6 层提示词（可自由增删改）
 │   ├── layer_01_subject.py
@@ -156,7 +182,8 @@ LayerForge/
 | 探索创意灵感 | `python cli.py -n 10 --random` |
 | 精准控制构图 | 修改 `layers/layer_05_view.py` 锁定视角 |
 | 换模型对比效果 | `--set-model` 快速切换 SD1.5 / SDXL |
-
+| 换模型对比效果	|`--set-model` 快速切换 SD1.5 / SDXL|
+| LoRA 风格增强	|`--set-lora style@0.7` + 预设生成|
 
 ### 🔧 自定义提示词
 
@@ -190,6 +217,19 @@ PRESET = {
     },
 }
 ```
+
+
+### LoRA 存放位置
+
+将 LoRA 文件（`.safetensors`）放入以下目录之一：
+
+| 模型类型 | LoRA 目录 |
+|----------|-----------|
+| SD1.5 | `D:/SD_OpenVINO/models/sd15-lora/` |
+| SDXL | `D:/SD_OpenVINO/models/sdxl-lora/` |
+
+系统会自动扫描 D:/E:/F:/G: 盘符。
+
 
 #### 📦 依赖
 ```python
