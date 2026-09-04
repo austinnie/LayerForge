@@ -18,3 +18,9 @@ opencv-python>=5.0.0
 
 # ========== Ollama API 调用（动态提示词） ==========
 requests>=2.31.0
+
+# .env 配置需要
+python-dotenv >= 1.0.0          
+
+# Word 文档生成需要（可选）
+python-docx >= 1.0.0            

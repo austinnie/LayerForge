@@ -14,10 +14,12 @@
 | **预设风格库** | 内置 90+ 预设风格（机甲、国风、人像、素描等） |
 | **动态提示词 (Ollama)** | 输入中文描述，AI 自动生成高质量 SD 提示词 |
 | **AI 图像鉴赏** | 生成图片后自动生成点评文案，适合作品集分享 |
+| **云端 API 支持** | 支持 7 种云端 API，无需本地 GPU 即可生成 |
 | **模型管理** | 自动检测本地模型，一键切换 SD1.5 / SDXL |
 | **LoRA 支持** | 加载 LoRA 增强风格，支持权重控制和默认设置 |
 | **图生图 (img2img)** | 基于参考图生成，保持构图换风格 |
 | **照片真实化后处理** | 自动清除元数据、添加噪点/暗角、注入 EXIF |
+| **Word 文档生成** | 自动生成作品集排版文档 |
 | **智能缓存** | 模型和 LoRA 列表缓存，秒级响应 |
 | **灵活组合** | 支持索引轮询、完全随机两种组合模式 |
 | **轻量无依赖** | 纯 Python 实现，无 WebUI 复杂依赖 |
@@ -132,6 +134,110 @@ python cli.py --dynamic
 python cli.py --prompt "描述" --ollama-model qwen2.5:7b -n 1
 ```
 
+### 支持的 Ollama 模型
+
+| 模型 | 大小 | 速度 | 质量 | 推荐度 |
+|------|------|------|------|--------|
+| `qwen2.5:1.5b` | 986MB | ⚡⚡⚡ 最快 | ⭐⭐⭐ 良好 | **默认推荐** |
+| `qwen2.5:3b` | 1.9GB | ⚡⚡ 快 | ⭐⭐⭐⭐ 较好 | 追求更好质量 |
+| `qwen2.5:7b` | 4.7GB | ⚡ 较慢 | ⭐⭐⭐⭐⭐ 最好 | 高质量提示词 |
+
+
+###  修改默认配置
+在 config.py 中调整：
+
+```python
+# ==================== Ollama 配置 ====================
+OLLAMA_HOST = "http://localhost:11434"   # Ollama 服务地址
+OLLAMA_MODEL = "qwen2.5:1.5b"            # 默认模型
+OLLAMA_TIMEOUT = 120                     # 超时时间（秒）
+OLLAMA_TEMPERATURE = 0.7                 # 温度参数
+OLLAMA_MAX_TOKENS = 200                  # 最大 token 数
+```
+
+### 云端 API
+
+| 命令 | 说明 |
+|------|------|
+| `--api PROVIDER` | 使用云端 API 生成图片 |
+| `--list-apis` | 列出所有可用 API 提供商 |
+
+**支持的 API 提供商：**
+
+| 提供商 | 费用 | 注册 | 说明 |
+|--------|------|------|------|
+| `pollinations` | 免费 | 不需要 | 完全免费，无需配置，推荐 |
+| `freeapi` | 免费 | 不需要 | 社区免费代理 |
+| `huggingface` | 免费 | 需要 Token | 需配置 `HF_API_TOKEN` |
+| `tongyi` | 付费 | 需要 | 通义万相（阿里云） |
+| `yige` | 付费 | 需要 | 文心一格（百度） |
+| `hunyuan` | 付费 | 需要 | 腾讯混元 |
+| `agnes` | 免费 | 需要注册 | Agnes AI |
+
+
+### 配置 .env
+为 .env 并填入你的 API Key：
+
+```bash
+# .env
+# ============================================================
+# 图像生成模式: "local" 或 "api"
+# ============================================================
+GENERATION_MODE=api
+API_PROVIDER=huggingface
+
+# ============================================================
+# HuggingFace (免费，推荐)
+# 获取 token: https://huggingface.co/settings/tokens
+# ============================================================
+HF_API_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+HF_MODEL=sdxl
+
+# ============================================================
+# 通义万相 (阿里云)
+# ============================================================
+TONGYI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TONGYI_MODEL=wanx-v1
+
+# ============================================================
+# 文心一格 (百度)
+# ============================================================
+YIGE_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+YIGE_SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# ============================================================
+# 腾讯混元
+# ============================================================
+HUNYUAN_SECRET_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+HUNYUAN_SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# ============================================================
+# Agnes AI (需注册)
+# ============================================================
+AGNES_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+AGNES_MODEL=flux
+```
+
+**云端 API 示例：**
+
+```bash
+# Pollinations（完全免费，无需注册）
+python cli.py -n 1 --preset mecha_glow --api pollinations
+
+# Free API（社区免费代理）
+python cli.py -n 1 --preset mecha_glow --api freeapi
+
+# HuggingFace（需配置 HF_API_TOKEN）
+python cli.py -n 1 --preset mecha_glow --api huggingface
+```
+
+### 配置 API Key：
+
+```bash
+# 编辑 .env 填入你的 API Key
+```
+
+
 ### AI 图像鉴赏
 
 | 命令 | 说明 |
@@ -238,8 +344,10 @@ python cli.py -n 1 --preset mecha_glow --no-postprocess
 
 | 命令 | 说明 |
 |------|------|
-| `--list-layers` | 查看各层配置和总组合数 |
-|`--refresh-cache`	|强制刷新缓存（添加新模型/LoRA 后使用）|
+| `--list-layers` 		| 查看各层配置和总组合数 |
+|`--refresh-cache`		|强制刷新缓存（添加新模型/LoRA 后使用）|
+|`--doc`				|生成 Word 文档（作品集排版）|
+|`--remove-watermark`	|去除图片中的水印|
 
 📁 目录结构
 ```text
@@ -250,19 +358,31 @@ LayerForge/
 ├── .model_config          # 用户选择的模型路径（自动生成）
 ├── .lora_config           # 用户选择的默认 LoRA（自动生成）
 ├── .cache.json            # 模型/LoRA 缓存（自动生成）
+├── .env                   # API Key 配置（不提交）
 │
 ├── core/                  # 核心引擎
 │   ├── loader.py          # 动态加载 6 层
-│   ├── composer.py        # 6 层组合器（含智能 token 截断 + Ollama 动态提示词）
+│   ├── composer.py        # 6 层组合器（含智能 token 截断 + Ollama）
 │   ├── generator.py       # SD 生成后端（含 LoRA 加载）
 │   ├── postprocessor.py   # 统一后处理入口
-│   └── appraiser.py       # AI 图像鉴赏器（BLIP + Ollama）
+│   ├── appraiser.py       # AI 图像鉴赏器（BLIP + Ollama）
+│   └── api_engines/       # 云端 API 引擎
+│       ├── base.py        # API 引擎基类
+│       ├── tongyi.py      # 通义万相
+│       ├── yige.py        # 文心一格
+│       ├── hunyuan.py     # 腾讯混元
+│       ├── huggingface.py # HuggingFace
+│       ├── pollinations.py # Pollinations AI（免费）
+│       ├── agnes.py       # Agnes AI
+│       └── freeapi.py     # 社区免费代理
 │
 ├── utils/                 # 工具模块
 │   ├── logger.py          # 日志
 │   ├── imagemeta_cleaner.py # 元数据清理
 │   ├── exif_injector.py   # EXIF 注入（31种相机预设）
-│   └── photo_realistic.py # 照片真实化
+│   ├── photo_realistic.py # 照片真实化
+│   ├── doc_generator.py   # Word 文档生成
+│   └── watermark.py       # 水印处理
 │
 ├── layers/                # 6 层提示词（可自由增删改）
 │   ├── layer_01_subject.py
@@ -411,6 +531,11 @@ safetensors >= 0.8.0
 opencv-python >= 5.0.0   # 照片真实化需要
 
 requests >= 2.31.0       # Ollama API 调用需要
+
+python-dotenv >= 1.0.0          # .env 配置需要
+
+python-docx >= 1.0.0            # Word 文档生成需要（可选）
+
 
 ```
 
