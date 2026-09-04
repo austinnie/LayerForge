@@ -270,7 +270,7 @@ class PromptComposer:
                     f"{OLLAMA_HOST}/api/generate",
                     json={
                         "model": model,
-                        "prompt": full_prompt,
+                        "prompt": user_desc,
                         "stream": False,
                         "temperature": 0.7,
                         "max_tokens": 200,

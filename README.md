@@ -12,6 +12,7 @@
 |------|------|
 | **6 层提示词架构** | 主体 / 场景 / 风格 / 光影 / 视角 / 画质，层层可控 |
 | **预设风格库** | 内置 90+ 预设风格（机甲、国风、人像、素描等） |
+| **动态提示词 (Ollama)** | 输入中文描述，AI 自动生成高质量 SD 提示词 |
 | **模型管理** | 自动检测本地模型，一键切换 SD1.5 / SDXL |
 | **LoRA 支持** | 加载 LoRA 增强风格，支持权重控制和默认设置 |
 | **图生图 (img2img)** | 基于参考图生成，保持构图换风格 |
@@ -101,6 +102,34 @@ python cli.py -n 3 --preset tiger_sketch
 | `--cfg N` | CFG 值（默认 7.5） |
 | `--width W --height H` | 自定义分辨率（默认 512x768） |
 | `--dry-run` | 仅预览提示词，不生成 |
+
+
+### 动态提示词 (Ollama)
+
+| 命令 | 说明 |
+|------|------|
+| `--prompt, -p TEXT` | 输入中文描述，AI 自动生成 SD 提示词 |
+| `--dynamic, -d` | 交互式模式（逐步引导输入） |
+| `--style-hint STYLE` | 风格提示: `general` / `anime` / `realistic` / `sketch` / `mecha` |
+| `--ollama-model MODEL` | 指定 Ollama 模型（默认 `qwen2.5:1.5b`） |
+
+**动态提示词示例：**
+```bash
+# 非交互模式：直接生成
+python cli.py --prompt "一个穿着白色连衣裙的女孩在向日葵花田里" -n 1
+
+# 指定风格
+python cli.py --prompt "机甲少女在赛博朋克城市" --style-hint mecha -n 1
+
+# 干跑预览（不生成图片）
+python cli.py --prompt "夕阳下的武士" --dry-run
+
+# 交互模式
+python cli.py --dynamic
+
+# 指定 Ollama 模型
+python cli.py --prompt "描述" --ollama-model qwen2.5:7b -n 1
+```
 
 #### 模型管理
 
@@ -283,6 +312,34 @@ PRESET = {
 
 系统会自动扫描 D:/E:/F:/G: 盘符。
 
+
+### 动态提示词 (Ollama)
+
+| 命令 | 说明 |
+|------|------|
+| `--prompt, -p TEXT` | 输入中文描述，AI 自动生成 SD 提示词 |
+| `--dynamic, -d` | 交互式模式（逐步引导输入） |
+| `--style-hint STYLE` | 风格提示: `general` / `anime` / `realistic` / `sketch` / `mecha` |
+| `--ollama-model MODEL` | 指定 Ollama 模型（默认 `qwen2.5:1.5b`） |
+
+**动态提示词示例：**
+```bash
+# 非交互模式：直接生成
+python cli.py --prompt "一个穿着白色连衣裙的女孩在向日葵花田里" -n 1
+
+# 指定风格
+python cli.py --prompt "机甲少女在赛博朋克城市" --style-hint mecha -n 1
+
+# 干跑预览（不生成图片）
+python cli.py --prompt "夕阳下的武士" --dry-run
+
+# 交互模式
+python cli.py --dynamic
+
+# 指定 Ollama 模型
+python cli.py --prompt "描述" --ollama-model qwen2.5:7b -n 1
+```
+
 ### 📷 相机预设
 
 后处理支持 **31 种相机预设**，可在 `config.py` 中切换：
@@ -324,6 +381,9 @@ numpy >= 1.24.0
 safetensors >= 0.8.0
 
 opencv-python >= 5.0.0   # 照片真实化需要
+
+requests >= 2.31.0       # Ollama API 调用需要
+
 ```
 
 #### 📄 License
