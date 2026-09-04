@@ -147,6 +147,13 @@ def main():
     parser.add_argument("--api", 
         choices=["tongyi", "yige", "hunyuan", "huggingface", "pollinations", "agnes", "freeapi"], 
         help="使用云端 API 生成图片")
+
+    # ==================== API 模型指定 ====================
+    parser.add_argument("--pollinations-model", type=str, help="指定 Pollinations 模型 (flux/turbo/sdxl/sd3/qwen)")
+    parser.add_argument("--hf-model", type=str, help="指定 HuggingFace 模型 (sdxl/sd3/flux/sd15)")
+    parser.add_argument("--tongyi-model", type=str, help="指定通义万相模型 (wanx-v1/wanx-v2/qwen-image)")
+    parser.add_argument("--agnes-model", type=str, help="指定 Agnes AI 模型 (flux/sdxl/sd3/turbo)")
+    parser.add_argument("--freeapi-model", type=str, help="指定 Free API 模型 (grok-imagine-image-lite/qwen3.7-plus/flux)")
     
     args = parser.parse_args()
 
@@ -400,18 +407,31 @@ def main():
     if use_api:
         # 构建 API 配置
         api_config = {
+            # 通义万相
             "TONGYI_API_KEY": TONGYI_API_KEY,
-            "TONGYI_MODEL": TONGYI_MODEL,
+            "TONGYI_MODEL": args.tongyi_model or TONGYI_MODEL,
+            
+            # 文心一格
             "YIGE_API_KEY": YIGE_API_KEY,
             "YIGE_SECRET_KEY": YIGE_SECRET_KEY,
+            
+            # 腾讯混元
             "HUNYUAN_SECRET_ID": HUNYUAN_SECRET_ID,
             "HUNYUAN_SECRET_KEY": HUNYUAN_SECRET_KEY,
+            
+            # HuggingFace
             "HF_API_TOKEN": HF_API_TOKEN,
-            "HF_MODEL": HF_MODEL,
-            "POLLINATIONS_MODEL": POLLINATIONS_MODEL,
+            "HF_MODEL": args.hf_model or HF_MODEL,
+            
+            # Pollinations
+            "POLLINATIONS_MODEL": args.pollinations_model or POLLINATIONS_MODEL,
+            
+            # Agnes AI
             "AGNES_API_KEY": AGNES_API_KEY,
-            "AGNES_MODEL": AGNES_MODEL,
-            "FREEAPI_MODEL": FREEAPI_MODEL,
+            "AGNES_MODEL": args.agnes_model or AGNES_MODEL,
+            
+            # Free API
+            "FREEAPI_MODEL": args.freeapi_model or FREEAPI_MODEL,
         }
         
         # 检查 API Key（非免费 API 需要检查）
