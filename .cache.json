@@ -1,0 +1,68 @@
+{
+  "loras": [
+    {
+      "name": "AMechaSSS",
+      "path": "D:/SD_OpenVINO/models/sd15-lora/AMechaSSS.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "MechaGirlFigure_v1",
+      "path": "D:/SD_OpenVINO/models/sd15-lora/MechaGirlFigure_v1.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "MechaGirl_v1",
+      "path": "D:/SD_OpenVINO/models/sd15-lora/MechaGirl_v1.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "Mechav2_1.0",
+      "path": "D:/SD_OpenVINO/models/sd15-lora/Mechav2_1.0.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "lora_never_smiles",
+      "path": "D:/SD_OpenVINO/models/sd15-lora/lora_never_smiles.safetensors",
+      "size": 9.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "mecha_girl",
+      "path": "D:/SD_OpenVINO/models/sd15-lora/mecha_girl.safetensors",
+      "size": 37.27,
+      "type": "SD1.5"
+    },
+    {
+      "name": "mecha_offset",
+      "path": "D:/SD_OpenVINO/models/sd15-lora/mecha_offset.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    }
+  ],
+  "loras_time": 1788484179.3937793,
+  "models": [
+    {
+      "name": "aiiiiii01_v10.safetensors",
+      "path": "D:/SD_OpenVINO/models/sd-v1-5/aiiiiii01_v10.safetensors",
+      "size": 1.99,
+      "type": "SD1.5"
+    },
+    {
+      "name": "perfectionAsianILXL_v10.safetensors",
+      "path": "D:/SD_OpenVINO/models/sdxl/perfectionAsianILXL_v10.safetensors",
+      "size": 6.46,
+      "type": "SDXL"
+    },
+    {
+      "name": "zenityXmix.inpainting.safetensors",
+      "path": "D:/SD_OpenVINO/models/sd-v1-5/zenityXmix.inpainting.safetensors",
+      "size": 2.96,
+      "type": "SD1.5"
+    }
+  ],
+  "models_time": 1788484203.983001
+}

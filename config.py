@@ -1,10 +1,15 @@
-# config.py（正确版本，不会被修改）
+# config.py
 """LayerForge 全局配置"""
 
 import os
+import json
+import time
 from pathlib import Path
+from typing import Optional
 
 MODEL_CONFIG_FILE = Path(__file__).parent / ".model_config"
+LORA_CONFIG_FILE = Path(__file__).parent / ".lora_config"
+CACHE_FILE = Path(__file__).parent / ".cache.json"
 
 # ==================== 读取或写入模型路径 ====================
 
@@ -64,7 +69,19 @@ def find_model_path():
     return None
 
 
-def list_available_models():
+def list_available_models(use_cache: bool = True, force_refresh: bool = False) -> list:
+    """列出所有可用的模型文件（带缓存）"""
+    if force_refresh:
+        set_cache("models", None)
+
+    if use_cache and not force_refresh:
+        cached = get_cache("models")
+        if cached is not None:
+            if validate_cache_paths(cached, "path"):
+                return cached
+            else:
+                print("   🔄 缓存中的模型文件已被删除，重新扫描...")
+
     drives = ["D:", "E:", "F:", "G:"]
     model_dirs = [
         "{drive}/SD_OpenVINO/models/sd-v1-5",
@@ -75,6 +92,7 @@ def list_available_models():
     found = []
     seen_names = set()
     extensions = [".safetensors", ".ckpt", ".pt"]
+
     for drive in drives:
         for base in model_dirs:
             base_path = base.format(drive=drive)
@@ -95,7 +113,18 @@ def list_available_models():
                         "type": model_type,
                     })
     found.sort(key=lambda x: x["name"])
+
+    if not found:
+        print("\n❌ 未找到任何模型文件！")
+        print("   请检查以下目录是否存在模型文件:")
+        for drive in drives:
+            print(f"   - {drive}/SD_OpenVINO/models/sd-v1-5/")
+            print(f"   - {drive}/SD_OpenVINO/models/sdxl/")
+        return []
+
+    set_cache("models", found)
     return found
+
 
 def detect_model_type(model_path: str) -> str:
     """检测模型类型：sd15 / sdxl"""
@@ -103,7 +132,8 @@ def detect_model_type(model_path: str) -> str:
     if "sdxl" in model_path_lower or "xl" in model_path_lower:
         return "sdxl"
     return "sd15"
-    
+
+
 def set_default_model(model_name: str) -> bool:
     models = list_available_models()
     if not models:
@@ -124,12 +154,217 @@ def set_default_model(model_name: str) -> bool:
             print(f"   - {m['name']}")
         return False
 
-    # ⭐ 保存到独立文件，不修改 config.py
     save_model_path(target["path"])
-
     print(f"✅ 默认模型已切换为: {target['name']}")
     print(f"   📁 {target['path']}")
     print(f"   📊 类型: {target['type']} | 大小: {target['size']} GB")
+    return True
+
+
+# ==================== LoRA 管理 ====================
+
+def get_lora_dirs() -> list:
+    """动态生成 LoRA 搜索路径"""
+    drives = ["D:", "E:", "F:", "G:"]
+    lora_subdirs = ["sd15-lora", "sdxl-lora"]
+    base_paths = [
+        "{drive}/SD_OpenVINO/models/{sub}",
+        "{drive}/models/{sub}",
+        "./models/{sub}",
+    ]
+
+    dirs = []
+    for drive in drives:
+        for base in base_paths:
+            for sub in lora_subdirs:
+                if base.startswith("./"):
+                    dirs.append(base.format(sub=sub))
+                else:
+                    dirs.append(base.format(drive=drive, sub=sub))
+
+    unique_dirs = []
+    seen = set()
+    for d in dirs:
+        if d not in seen:
+            seen.add(d)
+            if os.path.exists(d):
+                unique_dirs.append(d)
+                print(f"   📁 找到 LoRA 目录: {d}")
+
+    return unique_dirs
+
+LORA_DIRS = get_lora_dirs()
+
+
+def parse_lora_spec(spec: str) -> tuple:
+    """解析 LoRA 规格: 'name@0.8' 或 'path@0.8'"""
+    if '@' in spec:
+        path_or_name, weight_str = spec.rsplit('@', 1)
+        try:
+            weight = float(weight_str)
+        except:
+            weight = 0.8
+        return path_or_name.strip(), weight
+    return spec.strip(), 0.8
+
+
+def find_lora_file(name_or_path: str, model_type: str = None) -> str:
+    """在标准目录中查找 LoRA 文件"""
+    if os.path.exists(name_or_path):
+        return name_or_path
+
+    name_lower = name_or_path.lower()
+
+    for lora_dir in LORA_DIRS:
+        if not os.path.exists(lora_dir):
+            continue
+
+        if model_type:
+            if model_type == "sd15" and "sdxl" in lora_dir.lower():
+                continue
+            if model_type == "sdxl" and "sd15" in lora_dir.lower():
+                continue
+
+        for ext in [".safetensors", ".ckpt", ".pt"]:
+            for filepath in Path(lora_dir).glob(f"*{ext}"):
+                if name_lower in filepath.stem.lower():
+                    return str(filepath)
+    return None
+
+
+def list_available_loras(use_cache: bool = True, force_refresh: bool = False) -> list:
+    """列出所有可用的 LoRA 文件（带缓存）"""
+    if force_refresh:
+        set_cache("loras", None)
+
+    if use_cache and not force_refresh:
+        cached = get_cache("loras")
+        if cached is not None:
+            if validate_cache_paths(cached, "path"):
+                return cached
+            else:
+                print("   🔄 缓存中的 LoRA 文件已被删除，重新扫描...")
+
+    found = []
+    seen_names = set()
+
+    for lora_dir in get_lora_dirs():
+        if not os.path.exists(lora_dir):
+            continue
+        for ext in [".safetensors", ".ckpt", ".pt"]:
+            for filepath in Path(lora_dir).glob(f"*{ext}"):
+                name = filepath.stem
+                if name in seen_names:
+                    continue
+                seen_names.add(name)
+                size_mb = filepath.stat().st_size / (1024**2)
+                model_type = "SDXL" if "sdxl" in str(filepath) else "SD1.5"
+                found.append({
+                    "name": name,
+                    "path": str(filepath).replace("\\", "/"),
+                    "size": round(size_mb, 2),
+                    "type": model_type,
+                })
+    found.sort(key=lambda x: x["name"])
+
+    if not found:
+        print("\n❌ 未找到任何 LoRA 文件！")
+        print("   请检查以下目录:")
+        for d in get_lora_dirs():
+            print(f"   - {d}")
+        return []
+
+    set_cache("loras", found)
+    return found
+
+
+def resolve_loras(lora_specs: list, model_type: str = None) -> list:
+    """解析 LoRA 规格列表，返回完整的 LoRA 信息"""
+    if not lora_specs:
+        return []
+
+    result = []
+    for spec in lora_specs:
+        name_or_path, weight = parse_lora_spec(spec)
+        lora_path = find_lora_file(name_or_path, model_type)
+        if lora_path:
+            result.append({
+                "path": lora_path,
+                "weight": weight,
+                "name": Path(lora_path).stem,
+            })
+        else:
+            print(f"   ⚠️ 未找到 LoRA: {name_or_path}")
+
+    return result
+
+
+def get_saved_lora() -> Optional[str]:
+    """从 .lora_config 读取上次保存的 LoRA"""
+    if LORA_CONFIG_FILE.exists():
+        try:
+            return LORA_CONFIG_FILE.read_text(encoding="utf-8").strip()
+        except:
+            pass
+    return None
+
+
+def save_lora(lora_spec: str):
+    """保存 LoRA 到 .lora_config"""
+    LORA_CONFIG_FILE.write_text(lora_spec, encoding="utf-8")
+
+
+# ==================== 缓存管理 ====================
+
+def get_cache(key: str):
+    """
+    读取缓存（永不过期，只验证文件是否存在）
+    返回: 缓存数据，如果无效返回 None
+    """
+    if not CACHE_FILE.exists():
+        return None
+
+    try:
+        data = json.loads(CACHE_FILE.read_text(encoding="utf-8"))
+        if key not in data:
+            return None
+        return data[key]
+    except:
+        return None
+
+
+def set_cache(key: str, value):
+    """写入缓存"""
+    data = {}
+    if CACHE_FILE.exists():
+        try:
+            data = json.loads(CACHE_FILE.read_text(encoding="utf-8"))
+        except:
+            pass
+    data[key] = value
+    data[f"{key}_time"] = time.time()
+    CACHE_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def clear_cache():
+    """清除缓存"""
+    if CACHE_FILE.exists():
+        CACHE_FILE.unlink()
+        return True
+    return False
+
+
+def validate_cache_paths(cached_list: list, path_key: str = "path") -> bool:
+    """
+    验证缓存中的文件路径是否都有效
+    返回: True 全部有效, False 有文件被删除
+    """
+    if not cached_list:
+        return False
+    for item in cached_list:
+        path = item.get(path_key)
+        if path and not os.path.exists(path):
+            return False
     return True
 
 
@@ -140,9 +375,8 @@ MODEL_PATH = find_model_path()
 # if MODEL_PATH is None:
 #     MODEL_PATH = r"D:/SD_OpenVINO/models/sd-v1-5/anytimeRealistic_v10.safetensors"
 
-# 在 MODEL_PATH 确定后自动检测
 MODEL_TYPE = detect_model_type(MODEL_PATH) if MODEL_PATH else "sd15"
-MAX_TOKENS = 77 if MODEL_TYPE == "sd15" else 154  # SDXL 可以更多
+MAX_TOKENS = 77 if MODEL_TYPE == "sd15" else 154
 
 # ==================== 其他配置 ====================
 OUTPUT_DIR = "./output"
@@ -165,4 +399,11 @@ __all__ = [
     "find_model_path",
     "list_available_models",
     "set_default_model",
+    "list_available_loras",
+    "resolve_loras",
+    "clear_cache",
+    "get_saved_lora",
+    "save_lora",
+    "parse_lora_spec",
+    "find_lora_file",
 ]
