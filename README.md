@@ -14,6 +14,7 @@
 | **预设风格库** | 内置 90+ 预设风格（机甲、国风、人像、素描等） |
 | **动态提示词 (Ollama)** | 输入中文描述，AI 自动生成高质量 SD 提示词 |
 | **AI 图像鉴赏** | 生成图片后自动生成点评文案，适合作品集分享 |
+| **Agnes AI 多模态** | 文生图 / 图生图 / 推理 / 视频生成 / 图片反推 |
 | **云端 API 支持** | 支持 7 种云端 API，无需本地 GPU 即可生成 |
 | **模型管理** | 自动检测本地模型，一键切换 SD1.5 / SDXL |
 | **LoRA 支持** | 加载 LoRA 增强风格，支持权重控制和默认设置 |
@@ -167,12 +168,12 @@ OLLAMA_MAX_TOKENS = 200                  # 最大 token 数
 | 提供商 | 费用 | 注册 | 说明 |
 |--------|------|------|------|
 | `pollinations` | 免费 | 不需要 | 完全免费，无需配置，推荐 |
-| `freeapi` | 免费 | 不需要 | 社区免费代理 |
+| `agnes` | 免费 | 需要注册 | Agnes AI |
 | `huggingface` | 免费 | 需要 Token | 需配置 `HF_API_TOKEN` |
 | `tongyi` | 付费 | 需要 | 通义万相（阿里云） |
 | `yige` | 付费 | 需要 | 文心一格（百度） |
 | `hunyuan` | 付费 | 需要 | 腾讯混元 |
-| `agnes` | 免费 | 需要注册 | Agnes AI |
+| `freeapi` | 免费 | 不需要 | 社区免费代理 |
 
 
 ### 配置 .env
@@ -181,10 +182,15 @@ OLLAMA_MAX_TOKENS = 200                  # 最大 token 数
 ```bash
 # .env
 # ============================================================
-# 图像生成模式: "local" 或 "api"
+# LayerForge .env 配置示例
+# 复制此文件为 .env 并填入你的配置
 # ============================================================
-GENERATION_MODE=api
-API_PROVIDER=huggingface
+
+# ============================================================
+# 本地 SD 模型路径（可选，自动检测）
+# ============================================================
+# 如果自动检测失败，可以手动指定模型路径
+# SD_MODEL_PATH=D:/SD_OpenVINO/models/sd-v1-5/anytimeRealistic_v10.safetensors
 
 # ============================================================
 # HuggingFace (免费，推荐)
@@ -195,27 +201,64 @@ HF_MODEL=sdxl
 
 # ============================================================
 # 通义万相 (阿里云)
+# 获取: https://dashscope.console.aliyun.com/
 # ============================================================
 TONGYI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TONGYI_MODEL=wanx-v1
 
 # ============================================================
 # 文心一格 (百度)
+# 获取: https://console.bce.baidu.com/ai/#/ai/yige/app/list
 # ============================================================
 YIGE_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 YIGE_SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # ============================================================
 # 腾讯混元
+# 获取: https://console.cloud.tencent.com/hunyuan
 # ============================================================
 HUNYUAN_SECRET_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 HUNYUAN_SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # ============================================================
-# Agnes AI (需注册)
+# Agnes AI (免费，需注册)
+# 获取: https://apihub.agnes-ai.com
 # ============================================================
 AGNES_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-AGNES_MODEL=flux
+AGNES_IMAGE_MODEL=agnes-image-2.1-flash
+AGNES_TEXT_MODEL=agnes-text-2.1-flash
+AGNES_VIDEO_MODEL=agnes-video-2.1-flash
+AGNES_VISION_MODEL=agnes-vision-2.1-flash
+AGNES_BASE_URL=https://apihub.agnes-ai.com/v1
+
+# ============================================================
+# Pollinations AI (完全免费，无需配置)
+# 无需 API Key，直接使用
+# ============================================================
+POLLINATIONS_MODEL=flux
+
+# ============================================================
+# Free API (社区免费代理，无需配置)
+# 不推荐使用，稳定性较差
+# ============================================================
+FREEAPI_MODEL=grok-imagine-image-lite
+
+# ============================================================
+# Ollama 配置 (用于动态提示词和 AI 鉴赏)
+# ============================================================
+OLLAMA_HOST=http://localhost:11434
+OLLAMA_MODEL=qwen2.5:1.5b
+OLLAMA_TEMPERATURE=0.7
+OLLAMA_MAX_TOKENS=200
+OLLAMA_DYNAMIC_PROMPT_ENABLED=True
+
+# ============================================================
+# AI 图像鉴赏模式
+# blip: 仅使用 BLIP 描述
+# llm: BLIP + Ollama 润色 (推荐)
+# prompt: 仅返回提示词
+# ============================================================
+AI_APPRECIATION_ENGINE=llm
 ```
 
 **云端 API 示例：**
@@ -237,14 +280,41 @@ python cli.py -n 1 --preset mecha_glow --api huggingface
 # 编辑 .env 填入你的 API Key
 ```
 
-**推荐使用 Pollinations：**
+### Agnes AI 多模态能力
+
+| 命令 | 说明 |
+|------|------|
+| `--agnes-mode MODE` | 切换能力模式 |
+| `--agnes-message TEXT` | 推理模式消息内容 |
+| `--agnes-system TEXT` | 推理模式系统提示词 |
+
+**支持的 Agnes AI 模式：**
+
+| 模式 | 说明 | 需要参数 |
+|------|------|----------|
+| `text-to-image` | 文生图（默认） | `--preset` 或 `--prompt` |
+| `image-to-image` | 图生图 | `--image` 参考图 |
+| `chat` | 推理/对话 | `--agnes-message` |
+| `image-to-text` | 图片反推 | `--image` 图片路径 |
+| `video` | 视频生成 | `--prompt`（可选 `--image`） |
+
+**Agnes AI 使用示例：**
 
 ```bash
-# 使用默认模型
-python cli.py -n 1 --preset mecha_glow --api pollinations
+# 文生图（默认）
+python cli.py -n 1 --preset mecha_glow --api agnes
 
-# 指定模型
-python cli.py -n 1 --preset mecha_glow --api pollinations --pollinations-model sdxl
+# 图生图
+python cli.py --api agnes --agnes-mode image-to-image --image input.png --preset mecha_glow
+
+# 推理/对话
+python cli.py --api agnes --agnes-mode chat --agnes-message "解释一下什么是Stable Diffusion" --agnes-system "你是AI专家"
+
+# 图片反推
+python cli.py --api agnes --agnes-mode image-to-text --image output.png
+
+# 视频生成
+python cli.py --api agnes --agnes-mode video --prompt "一只猫在草地上奔跑" --image input.png
 ```
 
 ### 各 API 模型指定参数
