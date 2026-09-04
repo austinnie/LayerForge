@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from core.loader import load_all_layers
 from core.composer import PromptComposer
 from core.generator import SDGenerator
+from core.postprocessor import postprocess_image
 from config import (
     MODEL_PATH,
     MODEL_TYPE,
@@ -100,7 +101,11 @@ def main():
     # 图生图参数
     parser.add_argument("--image", "-i", type=str, help="参考图路径（图生图模式）")
     parser.add_argument("--strength", type=float, default=0.7, help="重绘强度 0.0-1.0（默认 0.7）")
-    
+
+    # 生成的图片后期处理
+    parser.add_argument("--no-postprocess", action="store_true", help="关闭后处理")
+    parser.add_argument("--postprocess-mode", choices=["clean", "realistic", "full"], default="full", help="后处理模式")
+        
     args = parser.parse_args()
 
     # ==================== 缓存刷新 ====================
@@ -236,13 +241,10 @@ def main():
         print("   或使用 --list-models 查看可用模型")
         return
 
-    # 解析 LoRA
     lora_list = []
     if args.lora:
-        # 临时 LoRA（覆盖默认）
         lora_list = resolve_loras(args.lora, MODEL_TYPE)
     else:
-        # 使用默认 LoRA
         saved_lora = get_saved_lora()
         if saved_lora:
             print(f"🔗 使用默认 LoRA: {saved_lora}")
@@ -252,19 +254,24 @@ def main():
     
     print(f"\n🎨 开始生成 {len(prompts)} 张...")
 
-    # ⭐ 判断是文生图还是图生图
     if args.image:
         print(f"   📷 图生图模式 | 参考图: {args.image} | 强度: {args.strength}")
         if not Path(args.image).exists():
             print(f"   ❌ 参考图不存在: {args.image}")
             return
-            
+
     for idx, prompt in enumerate(prompts):
         print(f"\n   [{idx+1}/{len(prompts)}]")
         
+        # 检测是否为素描风格
+        is_sketch = False
+        if args.preset:
+            is_sketch = any(kw in args.preset.lower() for kw in ["sketch", "lineart"])
+        if not is_sketch:
+            is_sketch = any(kw in prompt.lower() for kw in ["sketch", "lineart", "pencil", "baimiao"])
+        
         if args.image:
-            # 图生图
-            generator.generate_from_image(
+            output_path = generator.generate_from_image(
                 prompt=prompt,
                 negative=DEFAULT_NEGATIVE,
                 image_path=args.image,
@@ -276,8 +283,7 @@ def main():
                 seed=args.seed + idx if args.seed else None,
             )
         else:
-            # 文生图
-            generator.generate(
+            output_path = generator.generate(
                 prompt=prompt,
                 negative=DEFAULT_NEGATIVE,
                 width=args.width,
@@ -286,8 +292,13 @@ def main():
                 cfg=args.cfg,
                 seed=args.seed + idx if args.seed else None,
             )
-    
+        
+        # ⭐ 每张图生成后立即后处理
+        if not args.dry_run and not args.no_postprocess:
+            final_path = postprocess_image(output_path, is_sketch=is_sketch)
+
     print(f"\n✅ 全部完成！输出目录: {OUTPUT_DIR}")
+    
 
 if __name__ == "__main__":
     main()

@@ -385,7 +385,67 @@ DEFAULT_CFG = 7.5
 DEFAULT_WIDTH = 512
 DEFAULT_HEIGHT = 768
 DEFAULT_NEGATIVE = "worst quality, low quality, ugly, deformed, blurry, bad anatomy"
-ENABLE_POSTPROCESS = True
+
+# ==================== 后处理配置 ====================
+ENABLE_POSTPROCESS = True           # 总开关
+POSTPROCESS_MODE = "full"           # clean / realistic / full
+# - clean: 仅清除元数据 + 转 JPG
+# - realistic: 清除元数据 + 真实感效果
+# - full: 全部
+
+# ==================== 完整相机预设列表（31 个） ====================
+# 在 config.py 中设置 REALISTIC_CAMERA = "预设名称"
+
+## ---- Sony 系列 (6个) ----
+REALISTIC_CAMERA = "sony_a7iv"      # Sony α7 IV
+#REALISTIC_CAMERA = "sony_a7iii"     # Sony α7 III
+#REALISTIC_CAMERA = "sony_a1"        # Sony α1
+#REALISTIC_CAMERA = "sony_a7rv"      # Sony α7R V
+#REALISTIC_CAMERA = "sony_a9iii"     # Sony α9 III
+#REALISTIC_CAMERA = "sony_a6700"     # Sony α6700
+#
+## ---- Canon 系列 (5个) ----
+#REALISTIC_CAMERA = "canon_r5"       # Canon EOS R5
+#REALISTIC_CAMERA = "canon_r6"       # Canon EOS R6
+#REALISTIC_CAMERA = "canon_r3"       # Canon EOS R3
+#REALISTIC_CAMERA = "canon_r6ii"     # Canon EOS R6 Mark II
+#REALISTIC_CAMERA = "canon_r8"       # Canon EOS R8
+#
+## ---- Nikon 系列 (4个) ----
+#REALISTIC_CAMERA = "nikon_z8"       # Nikon Z 8
+#REALISTIC_CAMERA = "nikon_z9"       # Nikon Z 9
+#REALISTIC_CAMERA = "nikon_zf"       # Nikon Z f
+#REALISTIC_CAMERA = "nikon_z6iii"    # Nikon Z6 III
+#
+## ---- Fujifilm 系列 (4个) ----
+#REALISTIC_CAMERA = "fuji_x100v"     # Fujifilm X100V
+#REALISTIC_CAMERA = "fuji_xh2s"      # Fujifilm X-H2S
+#REALISTIC_CAMERA = "fuji_xt5"       # Fujifilm X-T5
+#REALISTIC_CAMERA = "fuji_gfx100ii"  # Fujifilm GFX 100 II
+#
+## ---- Panasonic 系列 (2个) ----
+#REALISTIC_CAMERA = "lumix_s5ii"     # Panasonic Lumix S5 II
+#REALISTIC_CAMERA = "lumix_gh6"      # Panasonic Lumix GH6
+#
+## ---- Leica 系列 (2个) ----
+#REALISTIC_CAMERA = "leica_m11"      # Leica M11
+#REALISTIC_CAMERA = "leica_q3"       # Leica Q3
+#
+## ---- Hasselblad 系列 (1个) ----
+#REALISTIC_CAMERA = "hasselblad_x2d" # Hasselblad X2D 100C
+#
+## ---- 手机系列 (6个) ----
+#REALISTIC_CAMERA = "iphone_15"      # Apple iPhone 15 Pro Max
+#REALISTIC_CAMERA = "iphone_16"      # Apple iPhone 16 Pro Max
+#REALISTIC_CAMERA = "pixel_8"        # Google Pixel 8 Pro
+#REALISTIC_CAMERA = "pixel_9"        # Google Pixel 9 Pro XL
+#REALISTIC_CAMERA = "samsung_s24u"   # Samsung Galaxy S24 Ultra
+#REALISTIC_CAMERA = "samsung_s24u"   # Samsung Galaxy S24 Ultra
+
+REALISTIC_STRENGTH = "medium"       # light / medium / strong
+REALISTIC_NOISE = True              # 是否添加噪点
+INJECT_EXIF = True                  # 是否注入 EXIF
+JPG_QUALITY = 92                    # JPG 质量
 
 __all__ = [
     "MODEL_PATH",
