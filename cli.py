@@ -96,6 +96,10 @@ def main():
     
     # 缓存管理
     parser.add_argument("--refresh-cache", action="store_true", help="强制刷新缓存（重新扫描模型和 LoRA）")
+
+    # 图生图参数
+    parser.add_argument("--image", "-i", type=str, help="参考图路径（图生图模式）")
+    parser.add_argument("--strength", type=float, default=0.7, help="重绘强度 0.0-1.0（默认 0.7）")
     
     args = parser.parse_args()
 
@@ -245,18 +249,44 @@ def main():
             lora_list = resolve_loras([saved_lora], MODEL_TYPE)
 
     generator = SDGenerator(MODEL_PATH, device="cpu", loras=lora_list)
+    
     print(f"\n🎨 开始生成 {len(prompts)} 张...")
+
+    # ⭐ 判断是文生图还是图生图
+    if args.image:
+        print(f"   📷 图生图模式 | 参考图: {args.image} | 强度: {args.strength}")
+        if not Path(args.image).exists():
+            print(f"   ❌ 参考图不存在: {args.image}")
+            return
+            
     for idx, prompt in enumerate(prompts):
         print(f"\n   [{idx+1}/{len(prompts)}]")
-        generator.generate(
-            prompt=prompt,
-            negative=DEFAULT_NEGATIVE,
-            width=args.width,
-            height=args.height,
-            steps=args.steps,
-            cfg=args.cfg,
-            seed=args.seed + idx if args.seed else None,
-        )
+        
+        if args.image:
+            # 图生图
+            generator.generate_from_image(
+                prompt=prompt,
+                negative=DEFAULT_NEGATIVE,
+                image_path=args.image,
+                strength=args.strength,
+                width=args.width,
+                height=args.height,
+                steps=args.steps,
+                cfg=args.cfg,
+                seed=args.seed + idx if args.seed else None,
+            )
+        else:
+            # 文生图
+            generator.generate(
+                prompt=prompt,
+                negative=DEFAULT_NEGATIVE,
+                width=args.width,
+                height=args.height,
+                steps=args.steps,
+                cfg=args.cfg,
+                seed=args.seed + idx if args.seed else None,
+            )
+    
     print(f"\n✅ 全部完成！输出目录: {OUTPUT_DIR}")
 
 if __name__ == "__main__":
