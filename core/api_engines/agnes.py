@@ -462,9 +462,18 @@ class AgnesEngine:
         
         # 注意：视频生成可能需要异步处理，实际端点可能不同
         # 这里使用 images/generations 的变体，实际可能需要调整
-        result = self._request("videos/generations", data, timeout=300)
-        
-        return result
+        # 尝试不同的端点
+        endpoints = ["videos/generations", "video/generations", "generations/video", "video"]
+        for endpoint in endpoints:
+            try:
+                result = self._request(endpoint, data, timeout=300)
+                # 如果成功则返回
+                return result
+            except Exception as e:
+                if "404" in str(e):
+                    continue
+                raise
+        raise Exception("所有视频端点均不可用")
     
     def video_status(self, task_id: str) -> Dict[str, Any]:
         """查询视频生成状态"""
