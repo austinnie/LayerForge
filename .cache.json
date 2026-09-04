@@ -2,67 +2,1711 @@
   "loras": [
     {
       "name": "AMechaSSS",
-      "path": "D:/SD_OpenVINO/models/sd15-lora/AMechaSSS.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/AMechaSSS.safetensors",
       "size": 72.11,
       "type": "SD1.5"
     },
     {
+      "name": "BT_Hand_in_Pants_XL",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/BT_Hand_in_Pants_XL.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "Chinese dragon-000014",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/Chinese dragon-000014.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "E382BBE383BCE383A9E383BCE38397E383.zMmt",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/E382BBE383BCE383A9E383BCE38397E383.zMmt.safetensors",
+      "size": 244.19,
+      "type": "SDXL"
+    },
+    {
+      "name": "LoRA Collection of Trauter's",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/LoRA Collection of Trauter's.safetensors",
+      "size": 144.08,
+      "type": "SD1.5"
+    },
+    {
+      "name": "Lora4Cute_girl_mix4",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/Lora4Cute_girl_mix4.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "Lora4FigmaAnimeFigures",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/Lora4FigmaAnimeFigures.safetensors",
+      "size": 147.94,
+      "type": "SD1.5"
+    },
+    {
+      "name": "Lora4guofeng3_Dream",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/Lora4guofeng3_Dream.safetensors",
+      "size": 14.74,
+      "type": "SD1.5"
+    },
+    {
+      "name": "Lora4guofeng3_WuMo2",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/Lora4guofeng3_WuMo2.safetensors",
+      "size": 14.74,
+      "type": "SD1.5"
+    },
+    {
+      "name": "Lora_20d_new",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/Lora_20d_new.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "Lora_ChilloutMixss3.0",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/Lora_ChilloutMixss3.0.safetensors",
+      "size": 72.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "Lora_Realistic_Anime",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/Lora_Realistic_Anime.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "Lora_Reallife",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/Lora_Reallife.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "Lora_dunhuang_v20",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/Lora_dunhuang_v20.safetensors",
+      "size": 168.53,
+      "type": "SD1.5"
+    },
+    {
+      "name": "Lora_epiCRealismHelper",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/Lora_epiCRealismHelper.safetensors",
+      "size": 55.83,
+      "type": "SD1.5"
+    },
+    {
       "name": "MechaGirlFigure_v1",
-      "path": "D:/SD_OpenVINO/models/sd15-lora/MechaGirlFigure_v1.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/MechaGirlFigure_v1.safetensors",
       "size": 144.11,
       "type": "SD1.5"
     },
     {
       "name": "MechaGirl_v1",
-      "path": "D:/SD_OpenVINO/models/sd15-lora/MechaGirl_v1.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/MechaGirl_v1.safetensors",
       "size": 144.11,
       "type": "SD1.5"
     },
     {
       "name": "Mechav2_1.0",
-      "path": "D:/SD_OpenVINO/models/sd15-lora/Mechav2_1.0.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/Mechav2_1.0.safetensors",
       "size": 144.11,
       "type": "SD1.5"
     },
     {
-      "name": "lora_never_smiles",
-      "path": "D:/SD_OpenVINO/models/sd15-lora/lora_never_smiles.safetensors",
+      "name": "OC",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/OC.safetensors",
+      "size": 144.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "PAseerEasternDragonV3",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/PAseerEasternDragonV3.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "aesthetic_anime",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/aesthetic_anime.safetensors",
+      "size": 324.98,
+      "type": "SDXL"
+    },
+    {
+      "name": "aiko",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/aiko.safetensors",
+      "size": 217.88,
+      "type": "SDXL"
+    },
+    {
+      "name": "airi_shadowstrike",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/airi_shadowstrike.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "aisha_egypt",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/aisha_egypt.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "aki_autumn",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/aki_autumn.safetensors",
+      "size": 244.19,
+      "type": "SDXL"
+    },
+    {
+      "name": "akiryomai_realistic",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/akiryomai_realistic.safetensors",
+      "size": 39.9,
+      "type": "SD1.5"
+    },
+    {
+      "name": "akiyama_rinko_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/akiyama_rinko_sdxl.safetensors",
+      "size": 435.34,
+      "type": "SDXL"
+    },
+    {
+      "name": "albedo",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/albedo.safetensors",
+      "size": 109.13,
+      "type": "SDXL"
+    },
+    {
+      "name": "alessandra",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/alessandra.safetensors",
+      "size": 18.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "amateur_photo",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/amateur_photo.safetensors",
+      "size": 649.68,
+      "type": "SDXL"
+    },
+    {
+      "name": "anche_stocking_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/anche_stocking_sdxl.safetensors",
+      "size": 222.15,
+      "type": "SDXL"
+    },
+    {
+      "name": "angie",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/angie.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "animal_secretary",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/animal_secretary.safetensors",
+      "size": 217.88,
+      "type": "SDXL"
+    },
+    {
+      "name": "anmi_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/anmi_sdxl.safetensors",
+      "size": 88.72,
+      "type": "SDXL"
+    },
+    {
+      "name": "anne_mary",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/anne_mary.safetensors",
+      "size": 35.01,
+      "type": "SD1.5"
+    },
+    {
+      "name": "anya_rocks",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/anya_rocks.safetensors",
+      "size": 217.88,
+      "type": "SDXL"
+    },
+    {
+      "name": "aqua",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/aqua.safetensors",
+      "size": 162.64,
+      "type": "SDXL"
+    },
+    {
+      "name": "aqua_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/aqua_sdxl.safetensors",
+      "size": 162.64,
+      "type": "SDXL"
+    },
+    {
+      "name": "arachi",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/arachi.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "arboliva",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/arboliva.safetensors",
+      "size": 18.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "artgerm_pony",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/artgerm_pony.safetensors",
+      "size": 217.89,
+      "type": "SDXL"
+    },
+    {
+      "name": "asian_beauty",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/asian_beauty.safetensors",
+      "size": 82.06,
+      "type": "SD1.5"
+    },
+    {
+      "name": "asian_girl_gimme",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/asian_girl_gimme.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "ave",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/ave.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "ayane",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/ayane.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "b1_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/b1_sdxl.safetensors",
+      "size": 54.76,
+      "type": "SDXL"
+    },
+    {
+      "name": "barghest_swim",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/barghest_swim.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "beautiful_indian_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/beautiful_indian_sdxl.safetensors",
+      "size": 435.35,
+      "type": "SDXL"
+    },
+    {
+      "name": "beauty_masters",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/beauty_masters.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "belle",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/belle.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "better_cleavage",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/better_cleavage.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "bgirl",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/bgirl.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "blue_lace_dress",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/blue_lace_dress.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "boa_hancock",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/boa_hancock.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "boobs",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/boobs.safetensors",
+      "size": 109.14,
+      "type": "SDXL"
+    },
+    {
+      "name": "bsmt",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/bsmt.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "bt_hand_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/bt_hand_sdxl.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "bt_lace_top_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/bt_lace_top_sdxl.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "busty_slider",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/busty_slider.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "busty_sophie_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/busty_sophie_sdxl.safetensors",
+      "size": 40.65,
+      "type": "SDXL"
+    },
+    {
+      "name": "caier_old_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/caier_old_sdxl.safetensors",
+      "size": 292.3,
+      "type": "SDXL"
+    },
+    {
+      "name": "cat_maid",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/cat_maid.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "cattleya_glory",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/cattleya_glory.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "charvi",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/charvi.safetensors",
+      "size": 217.88,
+      "type": "SDXL"
+    },
+    {
+      "name": "china_dress",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/china_dress.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "chunli",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/chunli.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "chunli_cos",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/chunli_cos.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "chutxkan",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/chutxkan.safetensors",
+      "size": 72.14,
+      "type": "SD1.5"
+    },
+    {
+      "name": "clothed",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/clothed.safetensors",
+      "size": 74.32,
+      "type": "SDXL"
+    },
+    {
+      "name": "coco",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/coco.safetensors",
+      "size": 144.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "colored_contacts",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/colored_contacts.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "comp_swim",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/comp_swim.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "cross_short",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/cross_short.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "cure_berry",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/cure_berry.safetensors",
+      "size": 244.19,
+      "type": "SDXL"
+    },
+    {
+      "name": "cure_berry_v2",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/cure_berry_v2.safetensors",
+      "size": 37.27,
+      "type": "SD1.5"
+    },
+    {
+      "name": "cyber_android_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/cyber_android_sdxl.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "cybermaid_melanite",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/cybermaid_melanite.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "cyborg_beauty",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/cyborg_beauty.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "dangui_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/dangui_sdxl.safetensors",
+      "size": 81.47,
+      "type": "SDXL"
+    },
+    {
+      "name": "dcp001",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/dcp001.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "dcp002",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/dcp002.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "dolphin_shorts",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/dolphin_shorts.safetensors",
+      "size": 9.13,
+      "type": "SD1.5"
+    },
+    {
+      "name": "donghua_cloths",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/donghua_cloths.safetensors",
+      "size": 435.34,
+      "type": "SDXL"
+    },
+    {
+      "name": "dorothy",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/dorothy.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "edg_bond",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/edg_bond.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "elizabeth",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/elizabeth.safetensors",
+      "size": 244.19,
+      "type": "SDXL"
+    },
+    {
+      "name": "elysia_cos",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/elysia_cos.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "ennezju9",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/ennezju9.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "equitation",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/equitation.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "eula",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/eula.safetensors",
+      "size": 116.52,
+      "type": "SD1.5"
+    },
+    {
+      "name": "eula_noface",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/eula_noface.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "eula_v2",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/eula_v2.safetensors",
+      "size": 36.21,
+      "type": "SD1.5"
+    },
+    {
+      "name": "eula_v3",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/eula_v3.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "eunjung",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/eunjung.safetensors",
+      "size": 18.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "european_doll",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/european_doll.safetensors",
+      "size": 144.34,
+      "type": "SD1.5"
+    },
+    {
+      "name": "face_upside",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/face_upside.safetensors",
+      "size": 435.34,
+      "type": "SDXL"
+    },
+    {
+      "name": "fiona",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/fiona.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "foxty",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/foxty.safetensors",
+      "size": 217.88,
+      "type": "SDXL"
+    },
+    {
+      "name": "g_20230717",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/g_20230717.safetensors",
+      "size": 108.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "geronimo",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/geronimo.safetensors",
+      "size": 36.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "glaceon",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/glaceon.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "gongbi",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/gongbi.safetensors",
+      "size": 14.64,
+      "type": "SD1.5"
+    },
+    {
+      "name": "guqinghan",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/guqinghan.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "hanfu_transparent",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/hanfu_transparent.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "hard_zipping",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/hard_zipping.safetensors",
+      "size": 15.67,
+      "type": "SD1.5"
+    },
+    {
+      "name": "her7",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/her7.safetensors",
+      "size": 435.39,
+      "type": "SDXL"
+    },
+    {
+      "name": "hestia",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/hestia.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "hot_pants",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/hot_pants.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "houshou_marine",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/houshou_marine.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "hu1a4",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/hu1a4.safetensors",
+      "size": 36.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "humantaur",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/humantaur.safetensors",
+      "size": 86.41,
+      "type": "SD1.5"
+    },
+    {
+      "name": "illustrious",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/illustrious.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "insta_influencer",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/insta_influencer.safetensors",
+      "size": 435.34,
+      "type": "SDXL"
+    },
+    {
+      "name": "ishtar",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/ishtar.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "izayoi_nonomi",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/izayoi_nonomi.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "jadecarving_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/jadecarving_sdxl.safetensors",
+      "size": 54.76,
+      "type": "SDXL"
+    },
+    {
+      "name": "jennie",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/jennie.safetensors",
+      "size": 217.88,
+      "type": "SDXL"
+    },
+    {
+      "name": "jill",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/jill.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "jiyingying",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/jiyingying.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "julia_flip",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/julia_flip.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "kalawarner",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/kalawarner.safetensors",
+      "size": 36.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "kandisi",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/kandisi.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "kashino_yong",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/kashino_yong.safetensors",
+      "size": 36.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "kiara",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/kiara.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "kido_saori",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/kido_saori.safetensors",
+      "size": 109.13,
+      "type": "SDXL"
+    },
+    {
+      "name": "killer_01",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/killer_01.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "killer_02",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/killer_02.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "killer_03",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/killer_03.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "killer_04",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/killer_04.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "killer_sheer",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/killer_sheer.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "kimono_seethrough",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/kimono_seethrough.safetensors",
+      "size": 36.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "kimonos",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/kimonos.safetensors",
+      "size": 37.27,
+      "type": "SD1.5"
+    },
+    {
+      "name": "kisaragi_maya",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/kisaragi_maya.safetensors",
+      "size": 36.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "kissshot_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/kissshot_sdxl.safetensors",
+      "size": 54.77,
+      "type": "SDXL"
+    },
+    {
+      "name": "kitana",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/kitana.safetensors",
+      "size": 109.14,
+      "type": "SDXL"
+    },
+    {
+      "name": "lace_blindfold",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/lace_blindfold.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "lace_mini",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/lace_mini.safetensors",
       "size": 9.11,
       "type": "SD1.5"
     },
     {
+      "name": "lace_nightgown",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/lace_nightgown.safetensors",
+      "size": 36.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "langjingshan",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/langjingshan.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "lei_lei",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/lei_lei.safetensors",
+      "size": 18.13,
+      "type": "SD1.5"
+    },
+    {
+      "name": "leia",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/leia.safetensors",
+      "size": 18.13,
+      "type": "SD1.5"
+    },
+    {
+      "name": "leifang",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/leifang.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "leifang_v2",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/leifang_v2.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "leila",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/leila.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "leilei",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/leilei.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "leipzig",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/leipzig.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "lili",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/lili.safetensors",
+      "size": 870.28,
+      "type": "SDXL"
+    },
+    {
+      "name": "linghan",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/linghan.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "long_dress_h6",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/long_dress_h6.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "lora_000004",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/lora_000004.safetensors",
+      "size": 435.34,
+      "type": "SDXL"
+    },
+    {
+      "name": "lora_000004_v2",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/lora_000004_v2.safetensors",
+      "size": 435.34,
+      "type": "SDXL"
+    },
+    {
+      "name": "lora_000006",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/lora_000006.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "lora_000009",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/lora_000009.safetensors",
+      "size": 435.34,
+      "type": "SDXL"
+    },
+    {
+      "name": "lora_1733",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/lora_1733.safetensors",
+      "size": 37.27,
+      "type": "SD1.5"
+    },
+    {
+      "name": "lora_1760",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/lora_1760.safetensors",
+      "size": 37.27,
+      "type": "SD1.5"
+    },
+    {
+      "name": "lora_20260212",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/lora_20260212.safetensors",
+      "size": 162.25,
+      "type": "SD1.5"
+    },
+    {
+      "name": "lou",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/lou.safetensors",
+      "size": 144.12,
+      "type": "SD1.5"
+    },
+    {
       "name": "mecha_girl",
-      "path": "D:/SD_OpenVINO/models/sd15-lora/mecha_girl.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/mecha_girl.safetensors",
       "size": 37.27,
       "type": "SD1.5"
     },
     {
       "name": "mecha_offset",
-      "path": "D:/SD_OpenVINO/models/sd15-lora/mecha_offset.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/mecha_offset.safetensors",
       "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "mei",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/mei.safetensors",
+      "size": 144.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "mejiro_kaori",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/mejiro_kaori.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "melanie",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/melanie.safetensors",
+      "size": 99.47,
+      "type": "SD1.5"
+    },
+    {
+      "name": "meru_kiky",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/meru_kiky.safetensors",
+      "size": 36.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "mitsuko_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/mitsuko_sdxl.safetensors",
+      "size": 40.88,
+      "type": "SDXL"
+    },
+    {
+      "name": "mitsuri",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/mitsuri.safetensors",
+      "size": 435.34,
+      "type": "SDXL"
+    },
+    {
+      "name": "mix4",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/mix4.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "mobwife_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/mobwife_sdxl.safetensors",
+      "size": 162.73,
+      "type": "SDXL"
+    },
+    {
+      "name": "modern_saree",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/modern_saree.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "monogatari",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/monogatari.safetensors",
+      "size": 54.77,
+      "type": "SDXL"
+    },
+    {
+      "name": "moona_hoshinova",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/moona_hoshinova.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "multi_girls",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/multi_girls.safetensors",
+      "size": 42.24,
+      "type": "SD1.5"
+    },
+    {
+      "name": "multiset_clothing",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/multiset_clothing.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "mune03",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/mune03.safetensors",
+      "size": 144.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "musashi_azur",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/musashi_azur.safetensors",
+      "size": 36.13,
+      "type": "SD1.5"
+    },
+    {
+      "name": "nagato_seethrough",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/nagato_seethrough.safetensors",
+      "size": 14.37,
+      "type": "SD1.5"
+    },
+    {
+      "name": "nargess_persian_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/nargess_persian_sdxl.safetensors",
+      "size": 435.34,
+      "type": "SDXL"
+    },
+    {
+      "name": "natasha",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/natasha.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "natasha_notreal",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/natasha_notreal.safetensors",
+      "size": 217.88,
+      "type": "SDXL"
+    },
+    {
+      "name": "nelson",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/nelson.safetensors",
+      "size": 36.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "ningrongrong",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/ningrongrong.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "ningyao",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/ningyao.safetensors",
+      "size": 63.09,
+      "type": "SD1.5"
+    },
+    {
+      "name": "ninja_suit",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/ninja_suit.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "nyo",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/nyo.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "oil_painting",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/oil_painting.safetensors",
+      "size": 9.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "ooaya_mari",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/ooaya_mari.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "ordinary_woman_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/ordinary_woman_sdxl.safetensors",
+      "size": 217.89,
+      "type": "SDXL"
+    },
+    {
+      "name": "paincraft_selfie_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/paincraft_selfie_sdxl.safetensors",
+      "size": 870.29,
+      "type": "SDXL"
+    },
+    {
+      "name": "pants_down",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/pants_down.safetensors",
+      "size": 36.13,
+      "type": "SD1.5"
+    },
+    {
+      "name": "pantyhose_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/pantyhose_sdxl.safetensors",
+      "size": 324.98,
+      "type": "SDXL"
+    },
+    {
+      "name": "pd802x4_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/pd802x4_sdxl.safetensors",
+      "size": 244.19,
+      "type": "SDXL"
+    },
+    {
+      "name": "pencil_pants",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/pencil_pants.safetensors",
+      "size": 18.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "preggo",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/preggo.safetensors",
+      "size": 36.13,
+      "type": "SD1.5"
+    },
+    {
+      "name": "prg_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/prg_sdxl.safetensors",
+      "size": 435.35,
+      "type": "SDXL"
+    },
+    {
+      "name": "public_v3",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/public_v3.safetensors",
+      "size": 18.75,
+      "type": "SD1.5"
+    },
+    {
+      "name": "pytorch_weights",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/pytorch_weights.safetensors",
+      "size": 1.66,
+      "type": "SD1.5"
+    },
+    {
+      "name": "qige_armor",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/qige_armor.safetensors",
+      "size": 652.81,
+      "type": "SDXL"
+    },
+    {
+      "name": "qipao_bluegreen",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/qipao_bluegreen.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "qipao_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/qipao_sdxl.safetensors",
+      "size": 54.76,
+      "type": "SDXL"
+    },
+    {
+      "name": "qp_blackflower",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/qp_blackflower.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "qp_cyan",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/qp_cyan.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "qp_shuimo",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/qp_shuimo.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "realistic_face",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/realistic_face.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "red_dudou",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/red_dudou.safetensors",
+      "size": 36.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "red_envelope",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/red_envelope.safetensors",
+      "size": 29.23,
+      "type": "SD1.5"
+    },
+    {
+      "name": "red_snake",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/red_snake.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "reina_rave",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/reina_rave.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "ruyue_zhenling",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/ruyue_zhenling.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "sailor_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/sailor_sdxl.safetensors",
+      "size": 244.19,
+      "type": "SDXL"
+    },
+    {
+      "name": "sarah",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/sarah.safetensors",
+      "size": 144.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "satin_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/satin_sdxl.safetensors",
+      "size": 162.64,
+      "type": "SDXL"
+    },
+    {
+      "name": "satin_seduct",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/satin_seduct.safetensors",
+      "size": 162.64,
+      "type": "SDXL"
+    },
+    {
+      "name": "sb_lyfe",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/sb_lyfe.safetensors",
+      "size": 36.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "school_uniform_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/school_uniform_sdxl.safetensors",
+      "size": 109.13,
+      "type": "SDXL"
+    },
+    {
+      "name": "seifuku",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/seifuku.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "seoyeon",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/seoyeon.safetensors",
+      "size": 217.88,
+      "type": "SDXL"
+    },
+    {
+      "name": "sequoya_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/sequoya_sdxl.safetensors",
+      "size": 217.88,
+      "type": "SDXL"
+    },
+    {
+      "name": "shiraori",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/shiraori.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "siemradzki",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/siemradzki.safetensors",
+      "size": 217.89,
+      "type": "SDXL"
+    },
+    {
+      "name": "silky_leisure",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/silky_leisure.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "silver_tight",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/silver_tight.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "sirius",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/sirius.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "sl_mrcc",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/sl_mrcc.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "sp_000008",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/sp_000008.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "sp_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/sp_sdxl.safetensors",
+      "size": 109.13,
+      "type": "SDXL"
+    },
+    {
+      "name": "sportswear_white",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/sportswear_white.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "stocking_teaser",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/stocking_teaser.safetensors",
+      "size": 36.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "stockings_black",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/stockings_black.safetensors",
+      "size": 72.12,
+      "type": "SD1.5"
+    },
+    {
+      "name": "stockings_tan",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/stockings_tan.safetensors",
+      "size": 72.13,
+      "type": "SD1.5"
+    },
+    {
+      "name": "super_busty",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/super_busty.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "ta_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/ta_sdxl.safetensors",
+      "size": 386.27,
+      "type": "SDXL"
+    },
+    {
+      "name": "ta_trained",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/ta_trained.safetensors",
+      "size": 386.27,
+      "type": "SDXL"
+    },
+    {
+      "name": "ta_trained_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/ta_trained_sdxl.safetensors",
+      "size": 386.27,
+      "type": "SDXL"
+    },
+    {
+      "name": "taiho",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/taiho.safetensors",
+      "size": 43.7,
+      "type": "SD1.5"
+    },
+    {
+      "name": "tan_stockings_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/tan_stockings_sdxl.safetensors",
+      "size": 324.98,
+      "type": "SDXL"
+    },
+    {
+      "name": "tawawa",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/tawawa.safetensors",
+      "size": 109.14,
+      "type": "SDXL"
+    },
+    {
+      "name": "teela",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/teela.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "temari",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/temari.safetensors",
+      "size": 217.87,
+      "type": "SDXL"
+    },
+    {
+      "name": "thin_busty_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/thin_busty_sdxl.safetensors",
+      "size": 188.85,
+      "type": "SDXL"
+    },
+    {
+      "name": "thin_top",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/thin_top.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "tifa",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/tifa.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "trans_dressing",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/trans_dressing.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "transparent_dress",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/transparent_dress.safetensors",
+      "size": 327.88,
+      "type": "SDXL"
+    },
+    {
+      "name": "transparent_sailor",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/transparent_sailor.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "tulle_lace",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/tulle_lace.safetensors",
+      "size": 72.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "tutuqpqp",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/tutuqpqp.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "virtual_woman",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/virtual_woman.safetensors",
+      "size": 217.88,
+      "type": "SDXL"
+    },
+    {
+      "name": "volleyball_uniform",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/volleyball_uniform.safetensors",
+      "size": 42.24,
+      "type": "SD1.5"
+    },
+    {
+      "name": "waist_chain",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/waist_chain.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "wanghong_shuiyi",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/wanghong_shuiyi.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "white_lace",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/white_lace.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "winry",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/winry.safetensors",
+      "size": 36.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "xiao_wu_sdxl",
+      "path": "E:/SD_OpenVINO/models/sdxl-lora/xiao_wu_sdxl.safetensors",
+      "size": 244.19,
+      "type": "SDXL"
+    },
+    {
+      "name": "yoga_pants",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/yoga_pants.safetensors",
+      "size": 18.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "yor",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/yor.safetensors",
+      "size": 144.11,
+      "type": "SD1.5"
+    },
+    {
+      "name": "yui_zit",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/yui_zit.safetensors",
+      "size": 162.25,
+      "type": "SD1.5"
+    },
+    {
+      "name": "zara_azur",
+      "path": "E:/SD_OpenVINO/models/sd15-lora/zara_azur.safetensors",
+      "size": 36.12,
       "type": "SD1.5"
     }
   ],
-  "loras_time": 1788484179.3937793,
+  "loras_time": 1788531207.3161273,
   "models": [
     {
+      "name": "DreamShaper_8_pruned.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/DreamShaper_8_pruned.safetensors",
+      "size": 1.99,
+      "type": "SD1.5"
+    },
+    {
       "name": "aiiiiii01_v10.safetensors",
-      "path": "D:/SD_OpenVINO/models/sd-v1-5/aiiiiii01_v10.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/aiiiiii01_v10.safetensors",
+      "size": 1.99,
+      "type": "SD1.5"
+    },
+    {
+      "name": "anycharactermixBaked_v20BakedVae.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/anycharactermixBaked_v20BakedVae.safetensors",
+      "size": 3.97,
+      "type": "SD1.5"
+    },
+    {
+      "name": "anytimeRealistic_v10.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/anytimeRealistic_v10.safetensors",
+      "size": 1.99,
+      "type": "SD1.5"
+    },
+    {
+      "name": "asianrealisticSdlife_v40.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/asianrealisticSdlife_v40.safetensors",
+      "size": 3.06,
+      "type": "SD1.5"
+    },
+    {
+      "name": "detailAsianRealistic_v60X21b.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/detailAsianRealistic_v60X21b.safetensors",
+      "size": 1.99,
+      "type": "SD1.5"
+    },
+    {
+      "name": "evalisenniaRealisticEastAsian_v40.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/evalisenniaRealisticEastAsian_v40.safetensors",
+      "size": 6.46,
+      "type": "SD1.5"
+    },
+    {
+      "name": "evalisenniaSD15Ultra_v20.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/evalisenniaSD15Ultra_v20.safetensors",
+      "size": 2.96,
+      "type": "SD1.5"
+    },
+    {
+      "name": "fantasticchixHR_v10Fp16NoEma.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/fantasticchixHR_v10Fp16NoEma.safetensors",
+      "size": 2.24,
+      "type": "SD1.5"
+    },
+    {
+      "name": "girlMix_V2.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/girlMix_V2.safetensors",
+      "size": 2.91,
+      "type": "SD1.5"
+    },
+    {
+      "name": "henmixrealV10_henmixrealV10.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/henmixrealV10_henmixrealV10.safetensors",
+      "size": 2.22,
+      "type": "SD1.5"
+    },
+    {
+      "name": "nexblendApex04Asian_v10.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/nexblendApex04Asian_v10.safetensors",
+      "size": 1.99,
+      "type": "SD1.5"
+    },
+    {
+      "name": "nexblendmixVividAsian_v10.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/nexblendmixVividAsian_v10.safetensors",
+      "size": 1.99,
+      "type": "SD1.5"
+    },
+    {
+      "name": "nextphoto_v30.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/nextphoto_v30.safetensors",
       "size": 1.99,
       "type": "SD1.5"
     },
     {
       "name": "perfectionAsianILXL_v10.safetensors",
-      "path": "D:/SD_OpenVINO/models/sdxl/perfectionAsianILXL_v10.safetensors",
+      "path": "E:/SD_OpenVINO/models/sdxl/perfectionAsianILXL_v10.safetensors",
       "size": 6.46,
       "type": "SDXL"
     },
     {
+      "name": "real_asia.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/real_asia.safetensors",
+      "size": 1.7,
+      "type": "SD1.5"
+    },
+    {
+      "name": "realisticmix_iiV12Version12.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/realisticmix_iiV12Version12.safetensors",
+      "size": 3.97,
+      "type": "SD1.5"
+    },
+    {
+      "name": "sd-v1-5-inpainting-tiny.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/sd-v1-5-inpainting-tiny.safetensors",
+      "size": 1.99,
+      "type": "SD1.5"
+    },
+    {
+      "name": "sd-v1-5-tiny.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/sd-v1-5-tiny.safetensors",
+      "size": 1.99,
+      "type": "SD1.5"
+    },
+    {
+      "name": "sdxl_lightning_1step_x0.safetensors",
+      "path": "E:/SD_OpenVINO/models/sdxl/sdxl_lightning_1step_x0.safetensors",
+      "size": 6.46,
+      "type": "SDXL"
+    },
+    {
+      "name": "sdxl_lightning_2step.safetensors",
+      "path": "E:/SD_OpenVINO/models/sdxl/sdxl_lightning_2step.safetensors",
+      "size": 6.46,
+      "type": "SDXL"
+    },
+    {
+      "name": "sdxl_lightning_4step.safetensors",
+      "path": "E:/SD_OpenVINO/models/sdxl/sdxl_lightning_4step.safetensors",
+      "size": 6.46,
+      "type": "SDXL"
+    },
+    {
+      "name": "shmRealistic_v40.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/shmRealistic_v40.safetensors",
+      "size": 3.97,
+      "type": "SD1.5"
+    },
+    {
+      "name": "t3_sdVer3.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/t3_sdVer3.safetensors",
+      "size": 4.51,
+      "type": "SD1.5"
+    },
+    {
+      "name": "ultimixFantastic_v11.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/ultimixFantastic_v11.safetensors",
+      "size": 1.99,
+      "type": "SD1.5"
+    },
+    {
+      "name": "xlAsianRealisticMixNhiPNhChU_v10.safetensors",
+      "path": "E:/SD_OpenVINO/models/sdxl/xlAsianRealisticMixNhiPNhChU_v10.safetensors",
+      "size": 6.46,
+      "type": "SDXL"
+    },
+    {
+      "name": "zemihr_v2.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/zemihr_v2.safetensors",
+      "size": 1.99,
+      "type": "SD1.5"
+    },
+    {
       "name": "zenityXmix.inpainting.safetensors",
-      "path": "D:/SD_OpenVINO/models/sd-v1-5/zenityXmix.inpainting.safetensors",
+      "path": "E:/SD_OpenVINO/models/sd-v1-5/zenityXmix.inpainting.safetensors",
       "size": 2.96,
       "type": "SD1.5"
     }
   ],
-  "models_time": 1788484203.983001
+  "models_time": 1788531103.4414937
 }
