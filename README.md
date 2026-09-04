@@ -237,6 +237,41 @@ python cli.py -n 1 --preset mecha_glow --api huggingface
 # 编辑 .env 填入你的 API Key
 ```
 
+**推荐使用 Pollinations：**
+
+```bash
+# 使用默认模型
+python cli.py -n 1 --preset mecha_glow --api pollinations
+
+# 指定模型
+python cli.py -n 1 --preset mecha_glow --api pollinations --pollinations-model sdxl
+```
+
+### 各 API 模型指定参数
+
+| API | 参数 | 可用模型 |
+|-----|------|----------|
+| Pollinations | `--pollinations-model` | `flux`, `turbo`, `sdxl`, `sd3`, `qwen` |
+| HuggingFace | `--hf-model` | `sdxl`, `sd3`, `flux`, `sd15` |
+| 通义万相 | `--tongyi-model` | `wanx-v1`, `wanx-v2`, `qwen-image` |
+| Agnes AI | `--agnes-model` | `flux`, `sdxl`, `sd3`, `turbo` |
+| Free API | `--freeapi-model` | `grok-imagine-image-lite`, `qwen3.7-plus`, `flux` |
+
+# Pollinations（推荐）
+python cli.py -n 1 --preset mecha_glow --api pollinations --pollinations-model sdxl
+
+# HuggingFace（需配置 HF_API_TOKEN）
+python cli.py -n 1 --preset mecha_glow --api huggingface --hf-model flux
+
+# 通义万相（需安装 dashscope）
+pip install dashscope
+python cli.py -n 1 --preset mecha_glow --api tongyi --tongyi-model qwen-image
+
+# Agnes AI（需注册获取 API Key）
+python cli.py -n 1 --preset mecha_glow --api agnes --agnes-model turbo
+
+# Free API（不推荐，图像模型已失效）
+python cli.py -n 1 --preset mecha_glow --api freeapi --freeapi-model qwen3.7-plus
 
 ### AI 图像鉴赏
 
