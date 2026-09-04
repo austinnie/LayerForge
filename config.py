@@ -7,6 +7,9 @@ import time
 from pathlib import Path
 from typing import Optional
 
+from dotenv import load_dotenv
+load_dotenv()  # 加载 .env 文件
+
 MODEL_CONFIG_FILE = Path(__file__).parent / ".model_config"
 LORA_CONFIG_FILE = Path(__file__).parent / ".lora_config"
 CACHE_FILE = Path(__file__).parent / ".cache.json"
@@ -461,6 +464,35 @@ AI_APPRECIATION_ENGINE = "llm"   # blip / llm / prompt
 # - llm: BLIP + Ollama 润色（推荐）
 # - prompt: 仅返回原始提示词
 
+
+# ==================== API 图像生成配置 ====================
+
+# 通义万相（阿里云）
+TONGYI_API_KEY = os.getenv("TONGYI_API_KEY", "")
+TONGYI_MODEL = os.getenv("TONGYI_MODEL", "wanx-v1")
+
+# 文心一格（百度）
+YIGE_API_KEY = os.getenv("YIGE_API_KEY", "")
+YIGE_SECRET_KEY = os.getenv("YIGE_SECRET_KEY", "")
+
+# 腾讯混元
+HUNYUAN_SECRET_ID = os.getenv("HUNYUAN_SECRET_ID", "")
+HUNYUAN_SECRET_KEY = os.getenv("HUNYUAN_SECRET_KEY", "")
+
+# HuggingFace
+HF_API_TOKEN = os.getenv("HF_API_TOKEN", "")
+HF_MODEL = os.getenv("HF_MODEL", "sdxl")
+
+# Pollinations AI（完全免费，无需 API Key）
+POLLINATIONS_MODEL = os.getenv("POLLINATIONS_MODEL", "flux")
+
+# Agnes AI（需注册）
+AGNES_API_KEY = os.getenv("AGNES_API_KEY", "")
+AGNES_MODEL = os.getenv("AGNES_MODEL", "flux")
+
+# Free API（社区免费代理，无需 API Key）
+FREEAPI_MODEL = os.getenv("FREEAPI_MODEL", "grok-imagine-image-lite")
+
 __all__ = [
     "MODEL_PATH",
     "OUTPUT_DIR",
@@ -480,9 +512,15 @@ __all__ = [
     "save_lora",
     "parse_lora_spec",
     "find_lora_file",
+    
     "OLLAMA_HOST",
     "OLLAMA_MODEL",
     "OLLAMA_TEMPERATURE",
     "OLLAMA_MAX_TOKENS",
-    "OLLAMA_DYNAMIC_PROMPT_ENABLED",    
+    "OLLAMA_DYNAMIC_PROMPT_ENABLED", 
+    "POLLINATIONS_MODEL",
+    
+    "AGNES_API_KEY",
+    "AGNES_MODEL",
+    "FREEAPI_MODEL",    
 ]

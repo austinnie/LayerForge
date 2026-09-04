@@ -6,6 +6,8 @@ import argparse
 import sys
 import importlib.util
 from pathlib import Path
+import os
+from datetime import datetime
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -37,6 +39,23 @@ from config import (
     OLLAMA_HOST,
     OLLAMA_MODEL,
     AI_APPRECIATION_ENGINE
+)
+
+# ==================== 导入 API 引擎 ====================
+from core.api_engines import create_api_engine
+from config import (
+    TONGYI_API_KEY,
+    TONGYI_MODEL,
+    YIGE_API_KEY,
+    YIGE_SECRET_KEY,
+    HUNYUAN_SECRET_ID,
+    HUNYUAN_SECRET_KEY,
+    HF_API_TOKEN,
+    HF_MODEL,
+    POLLINATIONS_MODEL,
+    AGNES_API_KEY,
+    AGNES_MODEL,
+    FREEAPI_MODEL,
 )
 
 
@@ -123,6 +142,11 @@ def main():
     parser.add_argument("--appraise", action="store_true", help="生成图片后自动鉴赏")
     parser.add_argument("--appraise-only", type=str, help="单独鉴赏已有图片: --appraise-only output/image.png")
     parser.add_argument("--appraise-model", type=str, help="指定鉴赏用的 Ollama 模型")
+    
+    # 使用云端 API 生成图片
+    parser.add_argument("--api", 
+        choices=["tongyi", "yige", "hunyuan", "huggingface", "pollinations", "agnes", "freeapi"], 
+        help="使用云端 API 生成图片")
     
     args = parser.parse_args()
 
@@ -367,28 +391,75 @@ def main():
         print("\n[干跑模式] 退出")
         return
 
-    # ==================== 生成图片 ====================
-    if not MODEL_PATH or not Path(MODEL_PATH).exists():
-        print(f"\n❌ 模型文件不存在: {MODEL_PATH}")
-        print("   请检查 config.py 中的 MODEL_PATH 配置")
-        print("   或使用 --list-models 查看可用模型")
-        return
+    # ==================== 准备生成引擎 ====================
+    # 判断是否使用云端 API
+    use_api = args.api is not None
 
-    # 解析 LoRA
-    lora_list = []
-    if args.lora:
-        lora_list = resolve_loras(args.lora, MODEL_TYPE)
+    # 如果使用 API，初始化 API 引擎
+    api_engine = None
+    if use_api:
+        # 构建 API 配置
+        api_config = {
+            "TONGYI_API_KEY": TONGYI_API_KEY,
+            "TONGYI_MODEL": TONGYI_MODEL,
+            "YIGE_API_KEY": YIGE_API_KEY,
+            "YIGE_SECRET_KEY": YIGE_SECRET_KEY,
+            "HUNYUAN_SECRET_ID": HUNYUAN_SECRET_ID,
+            "HUNYUAN_SECRET_KEY": HUNYUAN_SECRET_KEY,
+            "HF_API_TOKEN": HF_API_TOKEN,
+            "HF_MODEL": HF_MODEL,
+            "POLLINATIONS_MODEL": POLLINATIONS_MODEL,
+            "AGNES_API_KEY": AGNES_API_KEY,
+            "AGNES_MODEL": AGNES_MODEL,
+            "FREEAPI_MODEL": FREEAPI_MODEL,
+        }
+        
+        # 检查 API Key（非免费 API 需要检查）
+        if args.api == "tongyi" and not TONGYI_API_KEY:
+            print("❌ 请设置 TONGYI_API_KEY")
+            return
+        if args.api == "yige" and not (YIGE_API_KEY and YIGE_SECRET_KEY):
+            print("❌ 请设置 YIGE_API_KEY 和 YIGE_SECRET_KEY")
+            return
+        if args.api == "hunyuan" and not (HUNYUAN_SECRET_ID and HUNYUAN_SECRET_KEY):
+            print("❌ 请设置 HUNYUAN_SECRET_ID 和 HUNYUAN_SECRET_KEY")
+            return
+        if args.api == "huggingface" and not HF_API_TOKEN:
+            print("❌ 请设置 HF_API_TOKEN")
+            return
+        if args.api == "agnes" and not AGNES_API_KEY:
+            print("❌ 请设置 AGNES_API_KEY")
+            return
+        
+        print(f"🌐 使用云端 API: {args.api}")
+        try:
+            api_engine = create_api_engine(args.api, api_config)
+        except Exception as e:
+            print(f"❌ API 引擎初始化失败: {e}")
+            return
     else:
-        saved_lora = get_saved_lora()
-        if saved_lora:
-            print(f"🔗 使用默认 LoRA: {saved_lora}")
-            lora_list = resolve_loras([saved_lora], MODEL_TYPE)
+        # 本地 SD 模式
+        if not MODEL_PATH or not Path(MODEL_PATH).exists():
+            print(f"\n❌ 模型文件不存在: {MODEL_PATH}")
+            print("   请检查 config.py 中的 MODEL_PATH 配置")
+            print("   或使用 --list-models 查看可用模型")
+            return
 
-    generator = SDGenerator(MODEL_PATH, device="cpu", loras=lora_list)
-    
+        # 解析 LoRA
+        lora_list = []
+        if args.lora:
+            lora_list = resolve_loras(args.lora, MODEL_TYPE)
+        else:
+            saved_lora = get_saved_lora()
+            if saved_lora:
+                print(f"🔗 使用默认 LoRA: {saved_lora}")
+                lora_list = resolve_loras([saved_lora], MODEL_TYPE)
+
+        generator = SDGenerator(MODEL_PATH, device="cpu", loras=lora_list)
+
     print(f"\n🎨 开始生成 {len(prompts)} 张...")
 
-    if args.image:
+    if args.image and not use_api:
         print(f"   📷 图生图模式 | 参考图: {args.image} | 强度: {args.strength}")
         if not Path(args.image).exists():
             print(f"   ❌ 参考图不存在: {args.image}")
@@ -407,35 +478,59 @@ def main():
         if not is_sketch:
             is_sketch = any(kw in prompt.lower() for kw in ["sketch", "lineart", "pencil", "baimiao"])
         
-        if args.image:
-            output_path = generator.generate_from_image(
-                prompt=prompt,
-                negative=DEFAULT_NEGATIVE,
-                image_path=args.image,
-                strength=args.strength,
-                width=args.width,
-                height=args.height,
-                steps=args.steps,
-                cfg=args.cfg,
-                seed=args.seed + idx if args.seed else None,
-            )
+        if use_api:
+            # ⭐ 使用 API 生成
+            try:
+                image = api_engine.generate_single(
+                    prompt=prompt,
+                    negative=DEFAULT_NEGATIVE,
+                    width=args.width,
+                    height=args.height,
+                    steps=args.steps,
+                    cfg=args.cfg,
+                    seed=args.seed + idx if args.seed else None,
+                )
+                # 保存图片（API 返回 PIL Image）
+                os.makedirs(OUTPUT_DIR, exist_ok=True)
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                output_path = os.path.join(OUTPUT_DIR, f"{timestamp}_{args.seed or 0}.png")
+                image.save(output_path)
+                print(f"   ✅ 已保存: {output_path}")
+                generated_paths.append(output_path)
+            except Exception as e:
+                print(f"   ❌ API 生成失败: {e}")
+                continue
         else:
-            output_path = generator.generate(
-                prompt=prompt,
-                negative=DEFAULT_NEGATIVE,
-                width=args.width,
-                height=args.height,
-                steps=args.steps,
-                cfg=args.cfg,
-                seed=args.seed + idx if args.seed else None,
-            )
-        
-        # 每张图生成后立即后处理
-        final_path = output_path
-        if not args.dry_run and not args.no_postprocess:
-            final_path = postprocess_image(output_path, is_sketch=is_sketch)
-        
-        generated_paths.append(final_path)
+            # 本地 SD 生成
+            if args.image:
+                output_path = generator.generate_from_image(
+                    prompt=prompt,
+                    negative=DEFAULT_NEGATIVE,
+                    image_path=args.image,
+                    strength=args.strength,
+                    width=args.width,
+                    height=args.height,
+                    steps=args.steps,
+                    cfg=args.cfg,
+                    seed=args.seed + idx if args.seed else None,
+                )
+            else:
+                output_path = generator.generate(
+                    prompt=prompt,
+                    negative=DEFAULT_NEGATIVE,
+                    width=args.width,
+                    height=args.height,
+                    steps=args.steps,
+                    cfg=args.cfg,
+                    seed=args.seed + idx if args.seed else None,
+                )
+            
+            # 每张图生成后立即后处理
+            final_path = output_path
+            if not args.dry_run and not args.no_postprocess:
+                final_path = postprocess_image(output_path, is_sketch=is_sketch)
+            
+            generated_paths.append(final_path)
 
     # ==================== AI 图像鉴赏（批量鉴赏） ====================
     if args.appraise and generated_paths:
