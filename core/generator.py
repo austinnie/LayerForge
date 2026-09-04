@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from PIL import Image
 from diffusers import StableDiffusionPipeline, StableDiffusionXLPipeline
+from safetensors.torch import load_file  # 新增，用于手动加载
 
 
 class SDGenerator:
@@ -42,8 +43,9 @@ class SDGenerator:
             )
 
     def _load_loras(self):
-        """加载所有 LoRA"""
+        """加载所有 LoRA - 借鉴旧项目的稳健实现"""
         print(f"🔗 加载 {len(self.loras)} 个 LoRA...")
+        
         for i, lora_info in enumerate(self.loras):
             path = lora_info.get("path")
             weight = lora_info.get("weight", 0.8)
@@ -53,31 +55,91 @@ class SDGenerator:
                 print(f"   ⚠️ LoRA 文件不存在: {path}")
                 continue
             
+            # ---- 方法1: 标准加载 (diffusers 原生) ----
             try:
                 self.pipe.load_lora_weights(path)
-                if hasattr(self.pipe, "set_adapters"):
-                    try:
-                        self.pipe.set_adapters([name], adapter_weights=[weight])
-                    except:
-                        pass
                 print(f"   ✅ LoRA {i+1}: {name} (权重: {weight})")
+                continue  # 成功则继续下一个
             except Exception as e:
-                print(f"   ⚠️ LoRA 加载失败: {e}")
+                print(f"   ⚠️ 标准加载失败: {e}")
+            
+            # ---- 方法2: 手动加载（绕过 PEFT 检查，参考旧项目） ----
+            try:
+                print(f"   🔧 尝试手动加载 LoRA...")
+                self._load_lora_manual(path)
+                print(f"   ✅ LoRA {i+1}: {name} (手动加载成功, 权重: {weight})")
+            except Exception as e:
+                print(f"   ❌ LoRA {i+1} 加载失败（手动也失败）: {e}")
+
+    def _load_lora_manual(self, lora_path: str):
+        """
+        手动加载 LoRA（绕过 diffusers 的 PEFT 检查）
+        参考自旧项目 core/pipeline.py 的 load_lora_manual
+        """
+        # 1. 加载 LoRA 权重
+        state_dict = load_file(lora_path)
+        
+        # 2. 分离 UNet 和 Text Encoder 的权重
+        unet_state_dict = {}
+        te_state_dict = {}
+        
+        for key, value in state_dict.items():
+            # 跳过 alpha 值
+            if 'alpha' in key:
+                continue
+            
+            if 'lora_te_' in key:
+                # Text Encoder 权重
+                te_state_dict[key] = value
+            else:
+                # UNet 权重
+                unet_state_dict[key] = value
+        
+        # 3. 转换格式: lora_down -> lora_A, lora_up -> lora_B
+        converted_unet = {}
+        for key, value in unet_state_dict.items():
+            if 'lora_down' in key:
+                new_key = key.replace('lora_down', 'lora_A')
+                converted_unet[new_key] = value
+            elif 'lora_up' in key:
+                new_key = key.replace('lora_up', 'lora_B')
+                converted_unet[new_key] = value
+            else:
+                converted_unet[key] = value
+        
+        # 4. 加载到 UNet（strict=False 允许部分加载）
+        if converted_unet:
+            self.pipe.unet.load_state_dict(converted_unet, strict=False)
+            print(f"         ✅ UNet LoRA 加载完成 ({len(converted_unet)} 个权重)")
+        
+        # 5. 转换 Text Encoder 权重
+        converted_te = {}
+        for key, value in te_state_dict.items():
+            if 'lora_down' in key:
+                new_key = key.replace('lora_down', 'lora_A')
+                converted_te[new_key] = value
+            elif 'lora_up' in key:
+                new_key = key.replace('lora_up', 'lora_B')
+                converted_te[new_key] = value
+            else:
+                converted_te[key] = value
+        
+        # 6. 加载到 Text Encoder
+        if converted_te:
+            self.pipe.text_encoder.load_state_dict(converted_te, strict=False)
+            print(f"         ✅ Text Encoder LoRA 加载完成 ({len(converted_te)} 个权重)")
+        
+        print(f"      ✅ LoRA 手动加载完成")
 
     def _prepare_image(self, image_path: str, target_width: int = None, target_height: int = None):
-        """
-        加载并预处理参考图
-        返回: PIL Image
-        """
+        """加载并预处理参考图"""
         if not os.path.exists(image_path):
             raise FileNotFoundError(f"参考图不存在: {image_path}")
         
         image = Image.open(image_path).convert("RGB")
         w, h = image.size
         
-        # 如果指定了目标尺寸，缩放
         if target_width and target_height:
-            # 保持宽高比，缩放到不超过目标尺寸
             ratio = min(target_width / w, target_height / h)
             if ratio < 1:
                 new_w = int(w * ratio)
@@ -87,7 +149,6 @@ class SDGenerator:
                 image = image.resize((new_w, new_h), Image.Resampling.LANCZOS)
                 print(f"   📐 参考图缩放: {w}x{h} -> {new_w}x{new_h}")
         else:
-            # 如果图片太大，限制最大尺寸为 1024
             max_size = 1024
             if max(w, h) > max_size:
                 ratio = max_size / max(w, h)
@@ -143,28 +204,13 @@ class SDGenerator:
         cfg: float = 7.5,
         seed: int = None,
     ) -> str:
-        """
-        图生图：基于参考图生成新图
-        
-        参数:
-            prompt: 提示词
-            negative: 负面提示词
-            image_path: 参考图路径
-            strength: 重绘强度 (0.0-1.0)，越大变化越大
-            width: 输出宽度（默认使用参考图尺寸）
-            height: 输出高度（默认使用参考图尺寸）
-            steps: 迭代步数
-            cfg: CFG 值
-            seed: 随机种子
-        """
+        """图生图"""
         if seed is None:
             seed = random.randint(1, 2**32 - 1)
         
-        # 加载参考图
         print(f"   📷 加载参考图: {os.path.basename(image_path)}")
         image = self._prepare_image(image_path, width, height)
         
-        # 确定输出尺寸
         if width is None or height is None:
             width, height = image.size
         width = ((width + 31) // 64) * 64
@@ -172,15 +218,12 @@ class SDGenerator:
         
         generator = torch.Generator(self.device).manual_seed(seed)
         
-        # SDXL 需要额外的参数
         if isinstance(self.pipe, StableDiffusionXLPipeline):
-            # 构建 SDXL 的 added_cond_kwargs
             from diffusers import StableDiffusionXLPipeline
             added_cond_kwargs = {
                 "text_embeds": None,
                 "time_ids": self._get_time_ids(width, height),
             }
-            
             result = self.pipe(
                 prompt=prompt,
                 negative_prompt=negative,
@@ -194,7 +237,6 @@ class SDGenerator:
                 height=height,
             )
         else:
-            # SD1.5 图生图
             result = self.pipe(
                 prompt=prompt,
                 negative_prompt=negative,
@@ -208,7 +250,6 @@ class SDGenerator:
         return self._save_result(result.images[0], seed)
 
     def _get_time_ids(self, width: int, height: int):
-        """获取 SDXL 的 time_ids"""
         return torch.tensor([
             height, width,
             height, width,
@@ -216,7 +257,6 @@ class SDGenerator:
         ], dtype=torch.float32)
 
     def _save_result(self, image, seed: int) -> str:
-        """保存图片"""
         os.makedirs("output", exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_path = f"output/{timestamp}_{seed}.png"
