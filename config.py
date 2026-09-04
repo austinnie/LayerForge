@@ -455,6 +455,12 @@ OLLAMA_TEMPERATURE = 0.7
 OLLAMA_MAX_TOKENS = 200
 OLLAMA_DYNAMIC_PROMPT_ENABLED = True
 
+# ==================== AI 图像鉴赏配置 ====================
+AI_APPRECIATION_ENGINE = "llm"   # blip / llm / prompt
+# - blip: 仅使用 BLIP 生成描述
+# - llm: BLIP + Ollama 润色（推荐）
+# - prompt: 仅返回原始提示词
+
 __all__ = [
     "MODEL_PATH",
     "OUTPUT_DIR",

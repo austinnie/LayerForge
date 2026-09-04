@@ -13,6 +13,8 @@ from core.loader import load_all_layers
 from core.composer import PromptComposer
 from core.generator import SDGenerator
 from core.postprocessor import postprocess_image
+from core.appraiser import Appraiser
+
 from config import (
     MODEL_PATH,
     MODEL_TYPE,
@@ -34,7 +36,9 @@ from config import (
     find_lora_file,
     OLLAMA_HOST,
     OLLAMA_MODEL,
+    AI_APPRECIATION_ENGINE
 )
+
 
 # ==================== 预设加载函数 ====================
 
@@ -114,6 +118,11 @@ def main():
     parser.add_argument("--style-hint", choices=["general", "anime", "realistic", "sketch", "mecha"],
                         default="general", help="动态提示词风格提示")
     parser.add_argument("--ollama-model", type=str, help="指定 Ollama 模型")
+    
+    # AI 图像鉴赏
+    parser.add_argument("--appraise", action="store_true", help="生成图片后自动鉴赏")
+    parser.add_argument("--appraise-only", type=str, help="单独鉴赏已有图片: --appraise-only output/image.png")
+    parser.add_argument("--appraise-model", type=str, help="指定鉴赏用的 Ollama 模型")
     
     args = parser.parse_args()
 
@@ -255,6 +264,40 @@ def main():
         # 如果 --dry-run 已处理，不会执行到这里
         # 继续使用动态提示词生成
 
+    # ==================== AI 图像鉴赏（单独鉴赏） ====================
+    if args.appraise_only:
+        if not Path(args.appraise_only).exists():
+            print(f"❌ 图片不存在: {args.appraise_only}")
+            return
+        
+        print(f"\n📝 AI 鉴赏图片: {args.appraise_only}")
+        appraiser = Appraiser(ollama_model=args.appraise_model or OLLAMA_MODEL)
+        
+        # 尝试读取原始提示词
+        prompt_text = None
+        for ext in ['.txt', '.json']:
+            txt_file = args.appraise_only.replace('.png', ext).replace('.jpg', ext)
+            if Path(txt_file).exists():
+                with open(txt_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    if '【提示词】' in content:
+                        prompt_text = content.split('【提示词】')[1].split('\n')[0].strip()
+                break
+        
+        caption = appraiser.appraise(args.appraise_only, prompt_text)
+        print(f"\n   📝 {caption}")
+        
+        # 保存鉴赏结果
+        txt_file = args.appraise_only.replace('.png', '.txt').replace('.jpg', '.txt')
+        with open(txt_file, 'w', encoding='utf-8') as f:
+            f.write(f"【图片】: {Path(args.appraise_only).name}\n")
+            if prompt_text:
+                f.write(f"【提示词】: {prompt_text}\n")
+            f.write(f"{'='*50}\n")
+            f.write(f"【AI 鉴赏】:\n{caption}\n")
+        print(f"   💾 已保存: {Path(txt_file).name}")
+        return
+
     # ==================== 预设管理 ====================
     if args.list_presets:
         presets = list_available_presets()
@@ -351,6 +394,9 @@ def main():
             print(f"   ❌ 参考图不存在: {args.image}")
             return
 
+    # 存储生成的图片路径，用于鉴赏
+    generated_paths = []
+
     for idx, prompt in enumerate(prompts):
         print(f"\n   [{idx+1}/{len(prompts)}]")
         
@@ -385,8 +431,37 @@ def main():
             )
         
         # 每张图生成后立即后处理
+        final_path = output_path
         if not args.dry_run and not args.no_postprocess:
             final_path = postprocess_image(output_path, is_sketch=is_sketch)
+        
+        generated_paths.append(final_path)
+
+    # ==================== AI 图像鉴赏（批量鉴赏） ====================
+    if args.appraise and generated_paths:
+        print("\n📝 AI 图像鉴赏...")
+        appraiser = Appraiser(ollama_model=args.appraise_model or OLLAMA_MODEL)
+        
+        for idx, img_path in enumerate(generated_paths):
+            if not Path(img_path).exists():
+                continue
+            
+            # 获取对应的提示词
+            prompt_text = prompts[idx] if idx < len(prompts) else None
+            
+            print(f"\n   [{idx+1}/{len(generated_paths)}] {Path(img_path).name}")
+            caption = appraiser.appraise(img_path, prompt_text)
+            
+            # 保存鉴赏结果
+            txt_file = img_path.replace('.png', '.txt').replace('.jpg', '.txt')
+            with open(txt_file, 'w', encoding='utf-8') as f:
+                f.write(f"【图片】: {Path(img_path).name}\n")
+                f.write(f"【提示词】: {prompt_text}\n")
+                f.write(f"{'='*50}\n")
+                f.write(f"【AI 鉴赏】:\n{caption}\n")
+            
+            print(f"      💾 已保存: {Path(txt_file).name}")
+            print(f"      📝 {caption[:80]}...")
 
     print(f"\n✅ 全部完成！输出目录: {OUTPUT_DIR}")
 
