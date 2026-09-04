@@ -450,7 +450,7 @@ JPG_QUALITY = 92                    # JPG 质量
 
 # ==================== Ollama 配置 ====================
 OLLAMA_HOST = "http://127.0.0.1:11434"
-OLLAMA_MODEL = "qwen2.5:1.5b"
+OLLAMA_MODEL = "qwen2.5:3b"
 OLLAMA_TEMPERATURE = 0.7
 OLLAMA_MAX_TOKENS = 200
 OLLAMA_DYNAMIC_PROMPT_ENABLED = True

@@ -398,6 +398,8 @@ diffusers >= 0.26.0
 
 transformers >= 4.40.0
 
+peft >= 0.20.0 #加载LORA时需要
+
 accelerate >= 1.14.0
 
 pillow >= 10.0.0

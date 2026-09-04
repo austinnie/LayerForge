@@ -1,3 +1,6 @@
+# LayerForge 核心依赖
+# Python >= 3.10
+
 torch>=2.0.0
 torchvision>=0.15.0
 diffusers>=0.26.0
@@ -6,3 +9,12 @@ accelerate>=1.14.0
 pillow>=10.0.0
 numpy>=1.24.0
 safetensors>=0.8.0
+
+# ========== LoRA 支持 ==========
+peft>=0.20.0
+
+# ========== 照片真实化（后处理） ==========
+opencv-python>=5.0.0
+
+# ========== Ollama API 调用（动态提示词） ==========
+requests>=2.31.0
