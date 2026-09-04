@@ -13,6 +13,7 @@
 | **6 层提示词架构** | 主体 / 场景 / 风格 / 光影 / 视角 / 画质，层层可控 |
 | **预设风格库** | 内置 90+ 预设风格（机甲、国风、人像、素描等） |
 | **动态提示词 (Ollama)** | 输入中文描述，AI 自动生成高质量 SD 提示词 |
+| **AI 图像鉴赏** | 生成图片后自动生成点评文案，适合作品集分享 |
 | **模型管理** | 自动检测本地模型，一键切换 SD1.5 / SDXL |
 | **LoRA 支持** | 加载 LoRA 增强风格，支持权重控制和默认设置 |
 | **图生图 (img2img)** | 基于参考图生成，保持构图换风格 |
@@ -131,6 +132,30 @@ python cli.py --dynamic
 python cli.py --prompt "描述" --ollama-model qwen2.5:7b -n 1
 ```
 
+### AI 图像鉴赏
+
+| 命令 | 说明 |
+|------|------|
+| `--appraise` | 生成图片后自动鉴赏 |
+| `--appraise-only PATH` | 单独鉴赏已有图片 |
+| `--appraise-model MODEL` | 指定鉴赏用的 Ollama 模型 |
+
+**AI 图像鉴赏示例：**
+
+```bash
+# 生成 + 自动鉴赏
+python cli.py -n 1 --preset mecha_glow --appraise
+
+# 动态提示词 + 鉴赏
+python cli.py --prompt "一个穿白裙的女孩在向日葵田" -n 1 --appraise
+
+# 单独鉴赏已有图片
+python cli.py --appraise-only output/20260904_120000_123456.png
+
+# 指定鉴赏模型（质量更高）
+python cli.py -n 1 --preset mecha_glow --appraise --appraise-model qwen2.5:7b
+```
+
 #### 模型管理
 
 | 命令 | 说明 |
@@ -228,9 +253,10 @@ LayerForge/
 │
 ├── core/                  # 核心引擎
 │   ├── loader.py          # 动态加载 6 层
-│   ├── composer.py        # 6 层组合器（含智能 token 截断）
+│   ├── composer.py        # 6 层组合器（含智能 token 截断 + Ollama 动态提示词）
 │   ├── generator.py       # SD 生成后端（含 LoRA 加载）
-│   └── postprocessor.py   # 统一后处理入口
+│   ├── postprocessor.py   # 统一后处理入口
+│   └── appraiser.py       # AI 图像鉴赏器（BLIP + Ollama）
 │
 ├── utils/                 # 工具模块
 │   ├── logger.py          # 日志
