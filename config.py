@@ -486,9 +486,15 @@ HF_MODEL = os.getenv("HF_MODEL", "sdxl")
 # Pollinations AI（完全免费，无需 API Key）
 POLLINATIONS_MODEL = os.getenv("POLLINATIONS_MODEL", "flux")
 
+
+# ==================== Agnes AI 配置 ====================
 # Agnes AI（需注册）
 AGNES_API_KEY = os.getenv("AGNES_API_KEY", "")
-AGNES_MODEL = os.getenv("AGNES_MODEL", "flux")
+AGNES_BASE_URL = os.getenv("AGNES_BASE_URL", "https://apihub.agnes-ai.com/v1")
+AGNES_IMAGE_MODEL = os.getenv("AGNES_IMAGE_MODEL", "agnes-image-2.1-flash")
+AGNES_TEXT_MODEL = os.getenv("AGNES_TEXT_MODEL", "agnes-text-2.1-flash")
+AGNES_VIDEO_MODEL = os.getenv("AGNES_VIDEO_MODEL", "agnes-video-2.1-flash")
+AGNES_VISION_MODEL = os.getenv("AGNES_VISION_MODEL", "agnes-vision-2.1-flash")
 
 # Free API（社区免费代理，无需 API Key）
 FREEAPI_MODEL = os.getenv("FREEAPI_MODEL", "grok-imagine-image-lite")
@@ -521,8 +527,6 @@ __all__ = [
     "POLLINATIONS_MODEL",
     
     "POLLINATIONS_MODEL",
-    "AGNES_API_KEY",
-    "AGNES_MODEL",
     "FREEAPI_MODEL",
     "TONGYI_API_KEY",
     "TONGYI_MODEL",
@@ -532,4 +536,11 @@ __all__ = [
     "HUNYUAN_SECRET_KEY",
     "HF_API_TOKEN",
     "HF_MODEL",  
+
+    "AGNES_API_KEY",
+    "AGNES_BASE_URL",
+    "AGNES_IMAGE_MODEL",
+    "AGNES_TEXT_MODEL",
+    "AGNES_VIDEO_MODEL",
+    "AGNES_VISION_MODEL",    
 ]

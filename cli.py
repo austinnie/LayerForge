@@ -152,6 +152,15 @@ def main():
     parser.add_argument("--tongyi-model", type=str, help="指定通义万相模型 (wanx-v1/wanx-v2/qwen-image)")
     parser.add_argument("--agnes-model", type=str, help="指定 Agnes AI 模型 (flux/sdxl/sd3/turbo)")
     parser.add_argument("--freeapi-model", type=str, help="指定 Free API 模型 (grok-imagine-image-lite/qwen3.7-plus/flux)")
+
+    # ==================== Agnes AI 模式指定 ====================
+    parser.add_argument("--agnes-mode", 
+        choices=["text-to-image", "image-to-image", "chat", "video", "image-to-text"],
+        default="text-to-image",
+        help="Agnes AI 模式: text-to-image(文生图) / image-to-image(图生图) / chat(推理) / video(视频) / image-to-text(图片反推)")
+
+    parser.add_argument("--agnes-message", type=str, help="推理模式下的消息内容")
+    parser.add_argument("--agnes-system", type=str, help="推理模式下的系统提示词")
     
     args = parser.parse_args()
 
@@ -427,6 +436,9 @@ def main():
             # Agnes AI
             "AGNES_API_KEY": AGNES_API_KEY,
             "AGNES_MODEL": args.agnes_model or AGNES_MODEL,
+            "AGNES_MODE": args.agnes_mode,  # 新增
+            "AGNES_MESSAGE": args.agnes_message,  # 新增
+            "AGNES_SYSTEM": args.agnes_system,  # 新增            
             
             # Free API
             "FREEAPI_MODEL": args.freeapi_model or FREEAPI_MODEL,
@@ -497,30 +509,114 @@ def main():
             is_sketch = any(kw in prompt.lower() for kw in ["sketch", "lineart", "pencil", "baimiao"])
         
         if use_api:
-            # ⭐ 使用 API 生成
+            # ⭐ 获取当前模式（主要针对 Agnes AI）
+            agnes_mode = args.agnes_mode if args.api == "agnes" else "text-to-image"
+            
             try:
-                image = api_engine.generate_single(
-                    prompt=prompt,
-                    negative=DEFAULT_NEGATIVE,
-                    width=args.width,
-                    height=args.height,
-                    steps=args.steps,
-                    cfg=args.cfg,
-                    seed=args.seed + idx if args.seed else None,
-                )
-                # 保存图片（API 返回 PIL Image）
+                # ---- Agnes AI 特殊处理 ----
+                if args.api == "agnes":
+                    if agnes_mode == "chat":
+                        # 推理模式
+                        messages = []
+                        if args.agnes_system:
+                            messages.append({"role": "system", "content": args.agnes_system})
+                        messages.append({"role": "user", "content": args.agnes_message or prompt})
+                        result = api_engine.chat(messages)
+                        print(f"\n🤖 推理结果:\n{result}")
+                        continue  # 跳过图片生成
+                    
+                    elif agnes_mode == "image-to-text":
+                        # 图片反推
+                        if not args.image:
+                            print("❌ 图片反推需要指定 --image")
+                            continue
+                        image = Image.open(args.image)
+                        description = api_engine.image_to_text(image)
+                        print(f"\n📝 图片描述:\n{description}")
+                        continue
+                    
+                    elif agnes_mode == "video":
+                        # 视频生成
+                        image = Image.open(args.image) if args.image else None
+                        result = api_engine.video_generation(
+                            prompt=prompt,
+                            image=image,
+                            duration=5
+                        )
+                        print(f"\n🎬 视频任务已提交")
+                        if 'task_id' in result:
+                            video_url = api_engine.wait_for_video(result['task_id'])
+                            print(f"✅ 视频生成完成: {video_url}")
+                        continue
+                    
+                    elif agnes_mode == "image-to-image":
+                        # 图生图
+                        if not args.image:
+                            print("❌ 图生图需要指定 --image")
+                            continue
+                        image = Image.open(args.image)
+                        result_image = api_engine.image_to_image(
+                            prompt=prompt,
+                            image=image,
+                            strength=args.strength,
+                            width=args.width,
+                            height=args.height,
+                            steps=args.steps,
+                            cfg=args.cfg,
+                            seed=args.seed + idx if args.seed else None,
+                        )
+                        # 保存图片
+                        os.makedirs(OUTPUT_DIR, exist_ok=True)
+                        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                        output_path = os.path.join(OUTPUT_DIR, f"{timestamp}_{args.seed or 0}.png")
+                        result_image.save(output_path)
+                        
+                        # 后处理
+                        if not args.dry_run and not args.no_postprocess:
+                            final_path = postprocess_image(output_path, is_sketch=is_sketch)
+                            output_path = final_path
+                        
+                        print(f"   ✅ 已保存: {output_path}")
+                        generated_paths.append(output_path)
+                        continue  # 跳过下面的通用生成
+                    
+                    # 其他情况：使用 text-to-image
+                    image = api_engine.generate_single(
+                        prompt=prompt,
+                        negative=DEFAULT_NEGATIVE,
+                        width=args.width,
+                        height=args.height,
+                        steps=args.steps,
+                        cfg=args.cfg,
+                        seed=args.seed + idx if args.seed else None,
+                    )
+                
+                else:
+                    # ---- 其他 API 使用通用文生图 ----
+                    image = api_engine.generate_single(
+                        prompt=prompt,
+                        negative=DEFAULT_NEGATIVE,
+                        width=args.width,
+                        height=args.height,
+                        steps=args.steps,
+                        cfg=args.cfg,
+                        seed=args.seed + idx if args.seed else None,
+                    )
+                
+                # ---- 保存图片（通用） ----
                 os.makedirs(OUTPUT_DIR, exist_ok=True)
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 output_path = os.path.join(OUTPUT_DIR, f"{timestamp}_{args.seed or 0}.png")
                 image.save(output_path)
-
-                # ✅ 添加后处理
+                
+                # 后处理
                 if not args.dry_run and not args.no_postprocess:
                     final_path = postprocess_image(output_path, is_sketch=is_sketch)
                     output_path = final_path
-            
-                print(f"   ✅ 已保存: {output_path}")                
+                
+                print(f"   ✅ 已保存: {output_path}")
                 generated_paths.append(output_path)
+                
             except Exception as e:
                 print(f"   ❌ API 生成失败: {e}")
                 continue
