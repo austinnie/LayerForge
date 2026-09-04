@@ -447,6 +447,14 @@ REALISTIC_NOISE = True              # 是否添加噪点
 INJECT_EXIF = True                  # 是否注入 EXIF
 JPG_QUALITY = 92                    # JPG 质量
 
+
+# ==================== Ollama 配置 ====================
+OLLAMA_HOST = "http://127.0.0.1:11434"
+OLLAMA_MODEL = "qwen2.5:1.5b"
+OLLAMA_TEMPERATURE = 0.7
+OLLAMA_MAX_TOKENS = 200
+OLLAMA_DYNAMIC_PROMPT_ENABLED = True
+
 __all__ = [
     "MODEL_PATH",
     "OUTPUT_DIR",
@@ -466,4 +474,9 @@ __all__ = [
     "save_lora",
     "parse_lora_spec",
     "find_lora_file",
+    "OLLAMA_HOST",
+    "OLLAMA_MODEL",
+    "OLLAMA_TEMPERATURE",
+    "OLLAMA_MAX_TOKENS",
+    "OLLAMA_DYNAMIC_PROMPT_ENABLED",    
 ]

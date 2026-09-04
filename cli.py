@@ -32,6 +32,8 @@ from config import (
     save_lora,
     parse_lora_spec,
     find_lora_file,
+    OLLAMA_HOST,
+    OLLAMA_MODEL,
 )
 
 # ==================== 预设加载函数 ====================
@@ -105,7 +107,14 @@ def main():
     # 生成的图片后期处理
     parser.add_argument("--no-postprocess", action="store_true", help="关闭后处理")
     parser.add_argument("--postprocess-mode", choices=["clean", "realistic", "full"], default="full", help="后处理模式")
-        
+
+    # 动态提示词 (Ollama)
+    parser.add_argument("--dynamic", "-d", action="store_true", help="动态提示词模式（交互式）")
+    parser.add_argument("--prompt", "-p", type=str, help="动态提示词：直接指定画面描述")
+    parser.add_argument("--style-hint", choices=["general", "anime", "realistic", "sketch", "mecha"],
+                        default="general", help="动态提示词风格提示")
+    parser.add_argument("--ollama-model", type=str, help="指定 Ollama 模型")
+    
     args = parser.parse_args()
 
     # ==================== 缓存刷新 ====================
@@ -173,6 +182,79 @@ def main():
     layers = load_all_layers("layers")
     composer = PromptComposer(layers)
 
+    # ==================== 动态提示词 (Ollama) ====================
+    # 标记：是否使用动态提示词
+    use_dynamic_prompt = False
+    dynamic_prompt_text = None
+    
+    if args.prompt or args.dynamic:
+        use_dynamic_prompt = True
+        print("\n🤖 动态提示词模式 (Ollama)")
+        print("=" * 60)
+        
+        import requests
+        
+        # 检查 Ollama 是否可用
+        ollama_available = False
+        try:
+            resp = requests.get(f"{OLLAMA_HOST}/api/tags", timeout=3)
+            ollama_available = resp.status_code == 200
+            if ollama_available:
+                print("✅ Ollama 服务连接成功")
+        except Exception as e:
+            print(f"❌ 连接失败: {e}")
+        
+        if not ollama_available:
+            print("💡 请确保 Ollama 正在运行: ollama serve")
+            print("💡 安装: ollama pull qwen2.5:1.5b")
+            return
+        
+        # 获取用户描述
+        if args.dynamic and not args.prompt:
+            print("\n💬 请输入画面描述 (支持中英文):")
+            user_desc = input("> ").strip()
+            if not user_desc:
+                print("❌ 描述不能为空")
+                return
+        else:
+            user_desc = args.prompt
+        
+        if not user_desc:
+            print("❌ 请使用 --prompt 指定描述")
+            return
+        
+        # 确定使用的模型
+        model = args.ollama_model or OLLAMA_MODEL
+        
+        # 生成提示词
+        print(f"\n⏳ 正在用 '{model}' 生成提示词...")
+        dynamic_prompt_text = composer.generate_prompt_with_ollama(
+            user_desc=user_desc,
+            model=model,
+            style_hint=args.style_hint,
+            retry=2
+        )
+        
+        print(f"\n✅ 生成的提示词:")
+        print(f"   ─────────────────────────────────────────────────────")
+        print(f"   {dynamic_prompt_text}")
+        print(f"   ─────────────────────────────────────────────────────")
+        
+        if args.dry_run:
+            print("\n[干跑模式] 退出")
+            return
+
+        if args.dynamic:
+            confirm = input("\n是否使用此提示词生成? (y=生成 / n=取消 / r=重新描述): ").strip().lower()
+            if confirm == 'r':
+                return main()
+            elif confirm != 'y':
+                print("已取消")
+                return
+        
+        # 如果 --dry-run 已处理，不会执行到这里
+        # 继续使用动态提示词生成
+
     # ==================== 预设管理 ====================
     if args.list_presets:
         presets = list_available_presets()
@@ -212,23 +294,31 @@ def main():
         return
 
     # ==================== 生成提示词 ====================
-    total = composer.get_total_combinations()
-    print(f"\n📈 理论总组合数: {total:,}")
-    if total == 0:
-        print("❌ 错误: 没有任何层数据，请检查 layers/ 目录")
-        return
-
     prompts = []
-    if args.random:
-        for _ in range(args.count):
-            prompts.append(composer.compose_random(max_tokens=MAX_TOKENS))
+    
+    if use_dynamic_prompt and dynamic_prompt_text:
+        # ⭐ 动态提示词模式：直接使用生成的提示词
+        prompts = [dynamic_prompt_text]
+        print("\n📝 使用动态生成的提示词:")
+        print(f"   [1] {dynamic_prompt_text[:100]}{'...' if len(dynamic_prompt_text) > 100 else ''}")
     else:
-        for i in range(args.count):
-            prompts.append(composer.compose_by_index(i, max_tokens=MAX_TOKENS))
+        # 常规模式：组合 6 层
+        total = composer.get_total_combinations()
+        print(f"\n📈 理论总组合数: {total:,}")
+        if total == 0:
+            print("❌ 错误: 没有任何层数据，请检查 layers/ 目录")
+            return
 
-    print("\n📝 生成的提示词:")
-    for idx, p in enumerate(prompts):
-        print(f"   [{idx+1}] {p[:100]}{'...' if len(p) > 100 else ''}")
+        if args.random:
+            for _ in range(args.count):
+                prompts.append(composer.compose_random(max_tokens=MAX_TOKENS))
+        else:
+            for i in range(args.count):
+                prompts.append(composer.compose_by_index(i, max_tokens=MAX_TOKENS))
+
+        print("\n📝 生成的提示词:")
+        for idx, p in enumerate(prompts):
+            print(f"   [{idx+1}] {p[:100]}{'...' if len(p) > 100 else ''}")
 
     if args.dry_run:
         print("\n[干跑模式] 退出")
@@ -241,6 +331,7 @@ def main():
         print("   或使用 --list-models 查看可用模型")
         return
 
+    # 解析 LoRA
     lora_list = []
     if args.lora:
         lora_list = resolve_loras(args.lora, MODEL_TYPE)
@@ -293,12 +384,11 @@ def main():
                 seed=args.seed + idx if args.seed else None,
             )
         
-        # ⭐ 每张图生成后立即后处理
+        # 每张图生成后立即后处理
         if not args.dry_run and not args.no_postprocess:
             final_path = postprocess_image(output_path, is_sketch=is_sketch)
 
     print(f"\n✅ 全部完成！输出目录: {OUTPUT_DIR}")
-    
 
 if __name__ == "__main__":
     main()
