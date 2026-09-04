@@ -25,31 +25,32 @@ MODEL_PATH = "E:/SD_OpenVINO/models/sd-v1-5/DreamShaper_8_pruned.safetensors"
 DEFAULT_NEGATIVE = "(worst quality, low quality:1.4), bad anatomy, bad hands, missing fingers, extra digits, deformed, blurry, text, watermark"
 
 # ==================== 内置提示词层 (Layers) ====================
+# 终极精简版：只保留核心动作/材质/画风，绝对不超 77 Token 上限
 LAYERS = {
     "subject": [
-        "full body shot, highly detailed cybernetic anime girl, long white hair, translucent silver-white synthetic skin revealing intricate mechanical components, exposed gears in chest and abdomen, floating sharp mechanical blades, blue eyes, expressionless",
-        "beautiful android girl, semi-transparent mechanical body, delicate facial features, complex internal machinery visible through translucent shell, dual long blades hovering at sides, white and grey color palette",
-        "cyborg anime girl, white and silver cyborg body with human-like face, glowing blue energy core in chest, exposed mechanical joints and wiring, intricate robotic framework, floating sharp metal weapons"
+        "cybernetic anime girl, long white hair, translucent silver skin, exposed gears, floating blades, blue eyes",
+        "android girl, semi-transparent body, dual long blades, white grey palette",
+        "white cyborg, glowing blue core, exposed joints, floating sharp weapons"
     ],
     "scene": [
-        "industrial metal grating floor, clean grey background, soft studio lighting",
-        "minimalist grey backdrop, soft gradient, subtle volumetric fog"
+        "industrial floor, grey background, studio lighting",
+        "grey backdrop, soft fog"
     ],
     "style": [
-        "translucent cybernetic render, white and silver monochrome, intricate exposed mechanics, 3D CGI masterpiece, octane render",
-        "high resolution 3D render, delicate facial features, translucent metallic texture, artstation style"
+        "translucent render, 3D CGI, octane",
+        "3D render, metallic texture"
     ],
     "lighting": [
-        "soft ethereal glow, studio soft light, diffused daylight",
-        "cinematic lighting, cool tone, subtle blue LED accents"
+        "soft glow, diffused daylight",
+        "cinematic lighting, cool tone"
     ],
     "view": [
-        "eye-level medium shot, symmetric composition, front view",
-        "three-quarter view, elegant framing, standing pose"
+        "eye-level shot, symmetric",
+        "three-quarter view"
     ],
     "quality": [
-        "8k, highly detailed, sharp focus, hyper-realistic textures, masterpiece",
-        "4k, best quality, intricate fine details, award-winning"
+        "8k, sharp focus, masterpiece",
+        "4k, intricate details"
     ],
 }
 
@@ -66,15 +67,16 @@ PRESETS = {
     },
     "mecha_sketch": {
         "description": "白模铅笔素描风机甲",
-        "subject": "pencil sketch of a beautiful anime girl, long white hair, wearing futuristic white mechanical armor, detailed robotic structures, grey tone shading, concept art",
-        "scene": "pure white background",
-        "style": "fine linework, high contrast black and white pencil draft, 2D illustration style",
-        "lighting": "ethereal, soft lighting",
-        "view": "full body, front view",
-        "quality": "masterpiece, best quality",
+        "subject": "pencil sketch of anime girl, long white hair, mecha armor, grey shading",
+        "scene": "white background",
+        "style": "fine linework, 2D illustration",
+        "lighting": "ethereal, soft",
+        "view": "full body",
+        "quality": "masterpiece",
     }
 }
 
+# ==================== 核心生成引擎 ====================
 # ==================== 核心生成引擎 ====================
 class LocalSDGenerator:
     def __init__(self, model_path, loras=None):
@@ -103,24 +105,58 @@ class LocalSDGenerator:
         self.device = device
         print(f"✅ 模型加载完成，运行设备: {device.upper()}")
         
-        # 加载多个 LoRA
+        # ====== 手动加载多个 LoRA (借鉴 cli.py 的思路) ======
         if loras:
-            print(f"🔗 正在加载 {len(loras)} 个 LoRA...")
+            print(f"🔗 正在手动加载 {len(loras)} 个 LoRA...")
             lora_weights = []
             for lora_name, weight in loras:
                 lora_path = f"E:/SD_OpenVINO/models/sd15-lora/{lora_name}.safetensors"
                 if os.path.exists(lora_path):
-                    self.pipe.load_lora_weights(lora_path, adapter_name=lora_name)
-                    lora_weights.append((lora_name, weight))
-                    print(f"   ✅ 已加载: {lora_name} @ {weight}")
+                    try:
+                        # 1. 尝试标准的 diffusers 加载
+                        self.pipe.load_lora_weights(lora_path, adapter_name=lora_name, use_safetensors=True)
+                        lora_weights.append((lora_name, weight))
+                        print(f"   ✅ 标准加载成功: {lora_name} @ {weight}")
+                    except Exception as e:
+                        print(f"   ⚠️ 标准加载失败: {e}")
+                        print(f"   🔧 尝试手动加载 LoRA...")
+                        try:
+                            # 2. 手动加载：直接读取 safetensors 权重并注入
+                            from safetensors.torch import load_file
+                            import torch as pt
+                            
+                            # 读取权重
+                            lora_state_dict = load_file(lora_path)
+                            
+                            # 注入 UNet
+                            unet_lora_keys = {k.replace("lora_unet_", ""): v for k, v in lora_state_dict.items() if k.startswith("lora_unet_")}
+                            if unet_lora_keys:
+                                self.pipe.unet.load_state_dict(unet_lora_keys, strict=False)
+                                print(f"         ✅ UNet LoRA 加载完成 ({len(unet_lora_keys)} 个权重)")
+                            
+                            # 注入 Text Encoder
+                            te_lora_keys = {k.replace("lora_te_", ""): v for k, v in lora_state_dict.items() if k.startswith("lora_te_")}
+                            if te_lora_keys:
+                                self.pipe.text_encoder.load_state_dict(te_lora_keys, strict=False)
+                                print(f"         ✅ Text Encoder LoRA 加载完成 ({len(te_lora_keys)} 个权重)")
+                            
+                            # 手动记录权重供后续使用（注意：手动注入无法动态调整权重，它是直接覆盖基础模型权重的）
+                            lora_weights.append((lora_name, weight))
+                            print(f"      ✅ LoRA 手动加载完成: {lora_name} (权重: {weight})")
+                            
+                        except Exception as e2:
+                            print(f"   ❌ 手动加载也失败了: {e2}")
                 else:
                     print(f"   ❌ 未找到 LoRA 文件: {lora_path}")
             
-            # 统一设置权重
+            # 统一设置权重 (仅对标准加载有效的 LoRA 生效)
             if lora_weights:
                 adapter_names = [x[0] for x in lora_weights]
                 weights = [x[1] for x in lora_weights]
-                self.pipe.set_adapters(adapter_names, adapter_weights=weights)
+                try:
+                    self.pipe.set_adapters(adapter_names, adapter_weights=weights)
+                except:
+                    print("   ⚠️ 手动注入的 LoRA 无法通过 set_adapters 调整权重，已采用默认全量强度。")
 
     def generate(self, prompt, negative_prompt=DEFAULT_NEGATIVE, width=640, height=960, steps=30, cfg=7.5, seed=None):
         if seed is None:
