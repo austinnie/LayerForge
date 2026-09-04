@@ -144,9 +144,7 @@ def main():
     parser.add_argument("--appraise-model", type=str, help="指定鉴赏用的 Ollama 模型")
     
     # 使用云端 API 生成图片
-    parser.add_argument("--api", 
-        choices=["tongyi", "yige", "hunyuan", "huggingface", "pollinations", "agnes", "freeapi"], 
-        help="使用云端 API 生成图片")
+    parser.add_argument("--api", choices=["tongyi", "yige", "hunyuan", "huggingface", "pollinations", "agnes", "freeapi"], help="使用云端 API 生成图片")
 
     # ==================== API 模型指定 ====================
     parser.add_argument("--pollinations-model", type=str, help="指定 Pollinations 模型 (flux/turbo/sdxl/sd3/qwen)")
@@ -515,7 +513,13 @@ def main():
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 output_path = os.path.join(OUTPUT_DIR, f"{timestamp}_{args.seed or 0}.png")
                 image.save(output_path)
-                print(f"   ✅ 已保存: {output_path}")
+
+                # ✅ 添加后处理
+                if not args.dry_run and not args.no_postprocess:
+                    final_path = postprocess_image(output_path, is_sketch=is_sketch)
+                    output_path = final_path
+            
+                print(f"   ✅ 已保存: {output_path}")                
                 generated_paths.append(output_path)
             except Exception as e:
                 print(f"   ❌ API 生成失败: {e}")

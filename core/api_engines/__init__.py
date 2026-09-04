@@ -42,7 +42,7 @@ def create_api_engine(provider: str, config: dict) -> BaseEngine:
     # ✅ 以下为新增
     elif provider == "pollinations":
         return PollinationsEngine(
-            model=config.get("POLLINATIONS_MODEL", "flux")
+            model=config.get("POLLINATIONS_MODEL", None)  # ✅ 传递模型
         )
     
     elif provider == "agnes":
