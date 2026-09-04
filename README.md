@@ -14,6 +14,8 @@
 | **预设风格库** | 内置 90+ 预设风格（机甲、国风、人像、素描等） |
 | **模型管理** | 自动检测本地模型，一键切换 SD1.5 / SDXL |
 | **LoRA 支持** | 加载 LoRA 增强风格，支持权重控制和默认设置 |
+| **图生图 (img2img)** | 基于参考图生成，保持构图换风格 |
+| **照片真实化后处理** | 自动清除元数据、添加噪点/暗角、注入 EXIF |
 | **智能缓存** | 模型和 LoRA 列表缓存，秒级响应 |
 | **灵活组合** | 支持索引轮询、完全随机两种组合模式 |
 | **轻量无依赖** | 纯 Python 实现，无 WebUI 复杂依赖 |
@@ -129,12 +131,54 @@ python cli.py -n 1 --preset mecha_glow --lora eula_v2@0.6
 python cli.py -n 1 --preset mecha_glow --lora style@0.6 --lora detail@0.4
 ```
 
+
+#### 图生图
+
+| 命令 | 说明 |
+|------|------|
+|`--image, -i PATH`	|指定参考图路径（图生图模式）|
+|`--strength N`	|重绘强度 0.0-1.0（默认 0.7）|
+
+#### 图生图示例：
+
+```bash
+# 基于参考图 + 预设生成
+python cli.py -n 1 --image pose.png --preset mecha_glow
+
+# 控制重绘强度
+python cli.py -n 1 --image pose.png --preset mecha_glow --strength 0.5
+```
+
 #### 预设管理
 
 | 命令 | 说明 |
 |------|------|
 | `--list-presets` | 列出所有可用预设 |
 | `--preset NAME` | 使用指定预设 |
+
+
+### 后处理（照片真实化）
+
+| 命令 | 说明 |
+|------|------|
+| `--no-postprocess` | 关闭后处理（输出原始 PNG） |
+| `--postprocess-mode MODE` | 处理模式: `clean` / `realistic` / `full`（默认 `full`） |
+
+**后处理模式说明：**
+
+| 模式 | 清除元数据 | 转 JPG | 噪点/暗角 | EXIF 注入 |
+|------|:--------:|:------:|:--------:|:--------:|
+| `clean` | ✅ | ✅ | ❌ | ❌ |
+| `realistic` | ✅ | ✅ | ✅ | ❌ |
+| `full`（默认） | ✅ | ✅ | ✅ | ✅ |
+
+```bash
+# 仅清理元数据（不加真实感）
+python cli.py -n 1 --preset mecha_glow --postprocess-mode clean
+
+# 关闭所有后处理
+python cli.py -n 1 --preset mecha_glow --no-postprocess
+```
 
 #### 调试与缓存
 
@@ -156,7 +200,14 @@ LayerForge/
 ├── core/                  # 核心引擎
 │   ├── loader.py          # 动态加载 6 层
 │   ├── composer.py        # 6 层组合器（含智能 token 截断）
-│   └── generator.py       # SD 生成后端（含 LoRA 加载）
+│   ├── generator.py       # SD 生成后端（含 LoRA 加载）
+│   └── postprocessor.py   # 统一后处理入口
+│
+├── utils/                 # 工具模块
+│   ├── logger.py          # 日志
+│   ├── imagemeta_cleaner.py # 元数据清理
+│   ├── exif_injector.py   # EXIF 注入（31种相机预设）
+│   └── photo_realistic.py # 照片真实化
 │
 ├── layers/                # 6 层提示词（可自由增删改）
 │   ├── layer_01_subject.py
@@ -182,8 +233,10 @@ LayerForge/
 | 探索创意灵感 | `python cli.py -n 10 --random` |
 | 精准控制构图 | 修改 `layers/layer_05_view.py` 锁定视角 |
 | 换模型对比效果 | `--set-model` 快速切换 SD1.5 / SDXL |
-| 换模型对比效果	|`--set-model` 快速切换 SD1.5 / SDXL|
+
 | LoRA 风格增强	|`--set-lora style@0.7` + 预设生成|
+| 保持姿势换风格	|`--image pose.png --preset chinese_ink` |
+| 出图更真实	    | 默认 `--postprocess-mode full`（相机预设可切换）|
 
 ### 🔧 自定义提示词
 
@@ -230,6 +283,27 @@ PRESET = {
 
 系统会自动扫描 D:/E:/F:/G: 盘符。
 
+### 📷 相机预设
+
+后处理支持 **31 种相机预设**，可在 `config.py` 中切换：
+
+| 品牌 | 型号 |
+|------|------|
+| **Sony** | α7 IV, α7 III, α1, α7R V, α9 III, α6700 |
+| **Canon** | EOS R5, R6, R3, R6 Mark II, R8 |
+| **Nikon** | Z 8, Z 9, Z f, Z6 III |
+| **Fujifilm** | X100V, X-H2S, X-T5, GFX 100 II |
+| **Panasonic** | Lumix S5 II, GH6 |
+| **Leica** | M11, Q3 |
+| **Hasselblad** | X2D 100C |
+| **手机** | iPhone 15/16 Pro Max, Pixel 8/9 Pro, Galaxy S24 Ultra |
+
+```python
+# config.py 中切换
+REALISTIC_CAMERA = "sony_a1"        # Sony α1
+REALISTIC_CAMERA = "leica_m11"      # Leica M11
+REALISTIC_CAMERA = "iphone_16"      # iPhone 16 Pro Max
+```
 
 #### 📦 依赖
 ```python
@@ -248,6 +322,8 @@ pillow >= 10.0.0
 numpy >= 1.24.0
 
 safetensors >= 0.8.0
+
+opencv-python >= 5.0.0   # 照片真实化需要
 ```
 
 #### 📄 License
