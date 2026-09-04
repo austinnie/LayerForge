@@ -8,6 +8,7 @@ import importlib.util
 from pathlib import Path
 import os
 from datetime import datetime
+from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -38,7 +39,14 @@ from config import (
     find_lora_file,
     OLLAMA_HOST,
     OLLAMA_MODEL,
-    AI_APPRECIATION_ENGINE
+    AI_APPRECIATION_ENGINE,
+    
+    AGNES_API_KEY,
+    AGNES_IMAGE_MODEL,
+    AGNES_TEXT_MODEL,
+    AGNES_VIDEO_MODEL,
+    AGNES_VISION_MODEL,
+    FREEAPI_MODEL,    
 )
 
 # ==================== 导入 API 引擎 ====================
@@ -54,7 +62,7 @@ from config import (
     HF_MODEL,
     POLLINATIONS_MODEL,
     AGNES_API_KEY,
-    AGNES_MODEL,
+    AGNES_IMAGE_MODEL,
     FREEAPI_MODEL,
 )
 
@@ -234,7 +242,7 @@ def main():
     use_dynamic_prompt = False
     dynamic_prompt_text = None
     
-    if args.prompt or args.dynamic:
+    if args.dynamic or (args.prompt and not args.api):
         use_dynamic_prompt = True
         print("\n🤖 动态提示词模式 (Ollama)")
         print("=" * 60)
@@ -376,14 +384,16 @@ def main():
 
     # ==================== 生成提示词 ====================
     prompts = []
-    
-    if use_dynamic_prompt and dynamic_prompt_text:
-        # ⭐ 动态提示词模式：直接使用生成的提示词
+
+    if args.prompt and args.api:
+        prompts = [args.prompt]
+        print("\n📝 使用用户输入的提示词:")
+        print(f"   [1] {args.prompt[:100]}{'...' if len(args.prompt) > 100 else ''}")
+    elif use_dynamic_prompt and dynamic_prompt_text:
         prompts = [dynamic_prompt_text]
         print("\n📝 使用动态生成的提示词:")
-        print(f"   [1] {dynamic_prompt_text[:100]}{'...' if len(dynamic_prompt_text) > 100 else ''}")
+        print(f"   [1] {dynamic_prompt_text[:100]}...")
     else:
-        # 常规模式：组合 6 层
         total = composer.get_total_combinations()
         print(f"\n📈 理论总组合数: {total:,}")
         if total == 0:
@@ -399,7 +409,7 @@ def main():
 
         print("\n📝 生成的提示词:")
         for idx, p in enumerate(prompts):
-            print(f"   [{idx+1}] {p[:100]}{'...' if len(p) > 100 else ''}")
+            print(f"   [{idx+1}] {p[:100]}{'...' if len(p) > 100 else ''}")        
 
     if args.dry_run:
         print("\n[干跑模式] 退出")
@@ -435,10 +445,13 @@ def main():
             
             # Agnes AI
             "AGNES_API_KEY": AGNES_API_KEY,
-            "AGNES_MODEL": args.agnes_model or AGNES_MODEL,
-            "AGNES_MODE": args.agnes_mode,  # 新增
-            "AGNES_MESSAGE": args.agnes_message,  # 新增
-            "AGNES_SYSTEM": args.agnes_system,  # 新增            
+            "AGNES_IMAGE_MODEL": args.agnes_model or AGNES_IMAGE_MODEL,
+            "AGNES_TEXT_MODEL": args.agnes_model or AGNES_TEXT_MODEL,
+            "AGNES_VIDEO_MODEL": args.agnes_model or AGNES_VIDEO_MODEL,
+            "AGNES_VISION_MODEL": args.agnes_model or AGNES_VISION_MODEL,
+            "AGNES_MODE": args.agnes_mode,
+            "AGNES_MESSAGE": args.agnes_message,
+            "AGNES_SYSTEM": args.agnes_system,          
             
             # Free API
             "FREEAPI_MODEL": args.freeapi_model or FREEAPI_MODEL,

@@ -210,14 +210,15 @@ class AgnesEngine:
             "response_format": "url",
         }
         
-        if negative:
-            data["negative_prompt"] = negative
+        #if negative:
+        #    data["negative_prompt"] = negative
+        
         if seed is not None:
             data["seed"] = seed
-        if steps:
-            data["steps"] = steps
-        if cfg:
-            data["guidance_scale"] = cfg
+        #if steps:
+        #    data["steps"] = steps
+        #if cfg:
+        #    data["guidance_scale"] = cfg
         
         print(f"🔍 Agnes AI 文生图")
         print(f"🔍 模型: {self.image_model}, 尺寸: {size}")
@@ -247,7 +248,7 @@ class AgnesEngine:
         self,
         prompt: str,
         image: Image.Image,
-        strength: float = 0.7,
+        strength: float = 0.7,   # 保留但不使用
         width: int = None,
         height: int = None,
         steps: int = 20,
@@ -255,59 +256,74 @@ class AgnesEngine:
         seed: int = None,
     ) -> Image.Image:
         """
-        图生图
-        
-        Args:
-            prompt: 提示词
-            image: 参考图片 (PIL Image)
-            strength: 重绘强度 (0.0-1.0)
-            width: 输出宽度（默认使用原图尺寸）
-            height: 输出高度（默认使用原图尺寸）
-            steps: 迭代步数
-            cfg: CFG 值
-            seed: 随机种子
+        图生图 - 使用 multipart/form-data 上传
         """
-        # 获取尺寸
+        # 获取尺寸（用于显示）
         if width is None or height is None:
             width, height = image.size
-        
-        size = self._get_size(width, height)
-        
-        # 将图片转为 base64
-        image_base64 = self._image_to_base64(image)
-        
+        size = f"{width}x{height}"
+
+        # 将图片转为 bytes
+        img_bytes = io.BytesIO()
+        image.save(img_bytes, format='PNG')
+        img_bytes.seek(0)
+
+        # 构建 multipart 数据
         data = {
             "model": self.image_model,
             "prompt": prompt,
-            "image": f"data:image/png;base64,{image_base64}",
-            "strength": strength,
-            "n": 1,
+            "n": "1",
             "size": size,
             "response_format": "url",
         }
+        # ⭐ 不发送 strength, steps, cfg, seed（这些参数可能不支持）
+
+        files = {
+            "image": ("image.png", img_bytes, "image/png")
+        }
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            # 不设置 Content-Type，让 requests 自动处理 multipart
+        }
+
+        url = f"{self.base_url}/images/edits"
+
+        print(f"🔍 Agnes AI 图生图 (multipart)")
+        print(f"🔍 模型: {self.image_model}, 尺寸: {size}")
+
+        try:
+            response = requests.post(
+                url,
+                headers=headers,
+                data=data,
+                files=files,
+                timeout=120
+            )
+
+            if response.status_code != 200:
+                error_detail = {}
+                try:
+                    error_detail = response.json()
+                    error_msg = error_detail.get('error', {}).get('message', str(error_detail))
+                except:
+                    error_msg = response.text[:200]
+                raise Exception(f"Agnes AI API 调用失败 (状态码 {response.status_code}): {error_msg}")
+
+            result = response.json()
+
+            # 解析图片 URL
+            image_url = None
+            if 'data' in result and result['data']:
+                image_url = result['data'][0].get('url')
+            if not image_url:
+                raise Exception(f"无法解析图片URL，响应: {json.dumps(result)[:300]}")
+
+            return self._download_image(image_url)
+
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Agnes AI 请求失败: {e}")
         
-        if seed is not None:
-            data["seed"] = seed
-        if steps:
-            data["steps"] = steps
-        if cfg:
-            data["guidance_scale"] = cfg
-        
-        print(f"🔍 Agnes AI 图生图")
-        print(f"🔍 模型: {self.image_model}, 尺寸: {size}, 强度: {strength}")
-        
-        result = self._request("images/edits", data)
-        
-        # 解析图片
-        image_url = None
-        if 'data' in result and result['data']:
-            image_url = result['data'][0].get('url')
-        
-        if not image_url:
-            raise Exception(f"无法解析图片URL，响应: {json.dumps(result)[:300]}")
-        
-        return self._download_image(image_url)
-    
     # ==================== 推理/对话 ====================
     
     def chat(

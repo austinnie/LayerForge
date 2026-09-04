@@ -48,7 +48,12 @@ def create_api_engine(provider: str, config: dict) -> BaseEngine:
     elif provider == "agnes":
         return AgnesEngine(
             api_key=config.get("AGNES_API_KEY"),
-            model=config.get("AGNES_MODEL", "flux")
+            base_url=config.get("AGNES_BASE_URL"),
+            model=config.get("AGNES_MODEL", None),
+            image_model=config.get("AGNES_IMAGE_MODEL", None),
+            text_model=config.get("AGNES_TEXT_MODEL", None),
+            video_model=config.get("AGNES_VIDEO_MODEL", None),
+            vision_model=config.get("AGNES_VISION_MODEL", None),
         )
     
     elif provider == "freeapi":
