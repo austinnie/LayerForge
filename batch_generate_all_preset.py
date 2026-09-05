@@ -9,42 +9,42 @@ from pathlib import Path
 
 def main():
     preset_dir = Path("presets")
-    
-    # 获取所有预设文件（排除 __init__.py 和 index.py）
-    preset_files = [f for f in preset_dir.glob("*.py") 
-                    if f.stem not in ["__init__", "index"]]
-    
+    preset_files = [f for f in preset_dir.glob("*.py") if f.stem not in ["__init__", "index"]]
     total = len(preset_files)
     print("=" * 60)
     print(f"📊 找到 {total} 个预设")
     print("=" * 60)
-    
+
     success_count = 0
     fail_count = 0
     failed_presets = []
-    
+
     for idx, preset_path in enumerate(preset_files, 1):
         preset_name = preset_path.stem
         print(f"\n[{idx}/{total}] 🎨 生成: {preset_name}")
         print("-" * 40)
-        
+
+        # 设置环境变量强制子进程使用 UTF-8
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "utf-8"
+
         try:
-            # 调用 agnes.py 生成
             result = subprocess.run(
                 ['python', 'agnes.py', 'preset', preset_name, '-n', '1'],
                 capture_output=True,
                 text=True,
-                timeout=120
+                encoding='utf-8',      # 指定解码编码
+                errors='replace',      # 遇非法字符替换为 �，不抛异常
+                timeout=120,
+                env=env                # 传入环境变量
             )
-            
             if result.returncode == 0:
                 print(f"   ✅ 成功")
                 success_count += 1
             else:
-                print(f"   ❌ 失败: {result.stderr[:200] if result.stderr else '未知错误'}")
+                print(f"   ❌ 失败: {result.stderr}")
                 fail_count += 1
                 failed_presets.append(preset_name)
-                
         except subprocess.TimeoutExpired:
             print(f"   ⏰ 超时（120秒）")
             fail_count += 1
@@ -53,8 +53,7 @@ def main():
             print(f"   ❌ 异常: {e}")
             fail_count += 1
             failed_presets.append(preset_name)
-        
-        # 等待 2 秒，避免请求过快
+
         if idx < total:
             time.sleep(2)
     

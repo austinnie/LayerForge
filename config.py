@@ -1,6 +1,10 @@
 # config.py
 """LayerForge 全局配置"""
 
+import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 import os
 import json
 import time
@@ -192,7 +196,10 @@ def get_lora_dirs() -> list:
             seen.add(d)
             if os.path.exists(d):
                 unique_dirs.append(d)
-                print(f"   📁 找到 LoRA 目录: {d}")
+                try:
+                    print(f"   📁 找到 LoRA 目录: {d}")
+                except UnicodeEncodeError:
+                    print(f"   [FOLDER] 找到 LoRA 目录: {d}")                
 
     return unique_dirs
 
