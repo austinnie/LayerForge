@@ -97,16 +97,18 @@ class AgnesCLI:
             return None
         return self.composer.compose_by_index(index)
 
-    def _get_prompt_from_preset(self, preset_name: str):
-        """从预设获取提示词（覆盖 6 层）"""
+    def _get_prompt_from_preset(self, preset_name: str, random: bool = True):
+        """从预设获取提示词（覆盖 6 层），默认随机组合"""
         preset = self._load_preset(preset_name)
         if not preset:
             return None
 
         # 应用预设层
         self.composer.apply_preset(preset["layers"])
-        # 取第一个组合
-        return self.composer.compose_by_index(0)
+        if random:
+            return self.composer.compose_random()
+        else:
+            return self.composer.compose_by_index(0)
 
     def _save_prompt_file(self, image_path: str, prompt: str, label: str = None, 
                           seed: int = None, layers_detail: dict = None):
