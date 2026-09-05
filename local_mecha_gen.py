@@ -176,8 +176,28 @@ class LocalSDGenerator:
             generator=generator,
         ).images[0]
         
+        # ⭐ 保存图片和提示词
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        path = os.path.join(OUTPUT_DIR, f"mecha_{timestamp}.png")
+        image.save(path)
+        
+        # ⭐ 保存同名 .txt 文件
+        txt_path = path.replace('.png', '.txt')
+        with open(txt_path, 'w', encoding='utf-8') as f:
+            f.write(f"【提示词】: {prompt}\n")
+            f.write(f"【负面提示词】: {negative_prompt}\n")
+            f.write(f"【种子】: {seed}\n")
+            f.write(f"【尺寸】: {width}x{height}\n")
+            f.write(f"【步数】: {steps}\n")
+            f.write(f"【CFG】: {cfg}\n")
+            f.write(f"【模型】: {Path(MODEL_PATH).name}\n")
+            f.write(f"【生成时间】: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        
+        print(f"   ✅ 已保存至: {path}")
+        print(f"   📝 提示词已保存: {txt_path}")
         return image
-
+    
 # ==================== 提示词合成器 ====================
 class PromptComposer:
     def __init__(self, layers):

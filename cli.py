@@ -621,6 +621,21 @@ def main():
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 output_path = os.path.join(OUTPUT_DIR, f"{timestamp}_{args.seed or 0}.png")
                 image.save(output_path)
+
+                # ⭐ 保存提示词文件（同名 .txt）
+                txt_path = output_path.replace('.png', '.txt')
+                with open(txt_path, 'w', encoding='utf-8') as f:
+                    f.write(f"【模式】: {'API' if use_api else '本地SD'}\n")
+                    f.write(f"【API】: {args.api if use_api else 'N/A'}\n")
+                    f.write(f"【提示词】: {prompt}\n")
+                    f.write(f"【种子】: {args.seed + idx if args.seed else '随机'}\n")
+                    f.write(f"【尺寸】: {args.width}x{args.height}\n")
+                    f.write(f"【步数】: {args.steps}\n")
+                    f.write(f"【CFG】: {args.cfg}\n")
+                    if args.preset:
+                        f.write(f"【预设】: {args.preset}\n")
+                    f.write(f"【生成时间】: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                print(f"   📝 提示词已保存: {txt_path}")
                 
                 # 后处理
                 if not args.dry_run and not args.no_postprocess:

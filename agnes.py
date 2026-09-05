@@ -108,35 +108,59 @@ class AgnesCLI:
         # 取第一个组合
         return self.composer.compose_by_index(0)
 
-    def generate(self, prompt: str, count: int = 1, seed: int = None, show_layers: bool = False):
-        """文生图 - 支持分层提示词"""
+    def _save_prompt_file(self, image_path: str, prompt: str, label: str = None, 
+                          seed: int = None, layers_detail: dict = None):
+        """保存提示词到同名 .txt 文件"""
+        txt_path = image_path.replace('.png', '.txt')
+        with open(txt_path, 'w', encoding='utf-8') as f:
+            f.write(f"【预设】: {label if label else '自定义'}\n")
+            f.write(f"【提示词】: {prompt}\n")
+            f.write(f"【种子】: {seed if seed else '随机'}\n")
+            f.write(f"【尺寸】: {DEFAULT_WIDTH}x{DEFAULT_HEIGHT}\n")
+            f.write(f"【模型】: {AGNES_IMAGE_MODEL}\n")
+            f.write(f"【生成时间】: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            if layers_detail:
+                f.write("\n【6层组合详情】:\n")
+                for key, value in layers_detail.items():
+                    f.write(f"  {key}: {value}\n")
 
-        # 如果是分层提示词，显示每层内容
+    def generate(self, prompt: str, count: int = 1, seed: int = None, 
+                 show_layers: bool = False, label: str = None):
+        """文生图 - 支持分层提示词，自动保存提示词文件"""
+        
+        # 收集层详情（用于保存）
+        layers_detail = {}
         if show_layers and self.composer:
             print(f"\n📋 6 层组合详情:")
             for key in self.composer.LAYER_ORDER:
                 options = self.composer.layers.get(key, [])
                 if options:
-                    # 显示当前选中的选项（compose_by_index 用的索引 0）
                     idx = 0
                     chosen = options[idx % len(options)]
+                    layers_detail[key] = chosen
                     print(f"   {key}: {chosen[:60]}...")
 
         print(f"\n🎨 生成: {prompt[:80]}...")
         for i in range(count):
             try:
+                current_seed = seed + i if seed else None
                 image = self.engine.text_to_image(
                     prompt=prompt,
                     negative=DEFAULT_NEGATIVE,
                     width=DEFAULT_WIDTH,
                     height=DEFAULT_HEIGHT,
-                    seed=seed + i if seed else None,
+                    seed=current_seed,
                 )
                 os.makedirs(OUTPUT_DIR, exist_ok=True)
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 path = os.path.join(OUTPUT_DIR, f"agnes_{timestamp}_{i}.png")
                 image.save(path)
                 print(f"   ✅ [{i+1}/{count}] {path}")
+                
+                # ⭐ 保存提示词文件
+                self._save_prompt_file(path, prompt, label, current_seed, layers_detail)
+                print(f"   📝 提示词已保存: {path.replace('.png', '.txt')}")
+                
             except Exception as e:
                 print(f"   ❌ [{i+1}/{count}] {e}")
 
@@ -161,14 +185,16 @@ class AgnesCLI:
         prompt = self._get_prompt_from_preset(preset_name)
         if prompt:
             print(f"📋 预设: {preset_name}")
-            self.generate(prompt, count=count, seed=seed, show_layers=True)
+            self.generate(prompt, count=count, seed=seed, 
+                          show_layers=True, label=preset_name)
 
     def layer_gen(self, index: int, count: int = 1, seed: int = None):
         """使用分层索引生成"""
         prompt = self._get_prompt_from_layer(index)
         if prompt:
             print(f"📋 索引: {index}")
-            self.generate(prompt, count=count, seed=seed, show_layers=True)
+            self.generate(prompt, count=count, seed=seed, 
+                          show_layers=True, label=f"layer_{index}")
 
     def random_gen(self, count: int = 1, seed: int = None):
         """随机分层组合生成"""
@@ -179,7 +205,8 @@ class AgnesCLI:
             idx = random.randint(0, self.composer.get_total_combinations() - 1)
             prompt = self.composer.compose_by_index(idx)
             print(f"\n📋 随机组合 [{idx}]:")
-            self.generate(prompt, count=1, seed=seed + i if seed else None, show_layers=True)
+            self.generate(prompt, count=1, seed=seed + i if seed else None, 
+                          show_layers=True, label=f"random_{idx}")
 
     def describe(self, image_path: str):
         """图片反推"""
@@ -213,7 +240,10 @@ class AgnesCLI:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             path = os.path.join(OUTPUT_DIR, f"agnes_i2i_{timestamp}.png")
             result.save(path)
+            # ⭐ 图生图也保存提示词
+            self._save_prompt_file(path, prompt, label="image-to-image", seed=None)
             print(f"   ✅ {path}")
+            print(f"   📝 提示词已保存: {path.replace('.png', '.txt')}")
         except Exception as e:
             print(f"   ❌ {e}")
 
@@ -259,7 +289,7 @@ class AgnesCLI:
                     if len(parts) < 2:
                         print("❌ 请输入描述: gen 一只猫")
                         continue
-                    self.generate(parts[1])
+                    self.generate(parts[1], label="custom")
 
                 elif action == 'preset':
                     if len(parts) < 2:
@@ -330,7 +360,7 @@ def main():
         if not args.arg:
             print("❌ 请输入描述: agnes.py gen 一只猫")
             return
-        cli.generate(" ".join(args.arg), count=args.count, seed=args.seed)
+        cli.generate(" ".join(args.arg), count=args.count, seed=args.seed, label="custom")
 
     elif cmd == "preset":
         if not args.arg:
