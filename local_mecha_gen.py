@@ -235,6 +235,7 @@ def main():
     parser.add_argument("--cfg", type=float, default=7.0, help="CFG Scale (建议5.5-7.5)")
     parser.add_argument("--seed", type=int, default=None, help="固定种子")
     parser.add_argument("--random", action="store_true", help="随机组合6层提示词")
+    parser.add_argument("--fixed", action="store_true", help="固定索引轮询（默认随机）")
     parser.add_argument("--list-presets", action="store_true", help="列出可用预设")
     parser.add_argument("--width", type=int, default=640, help="宽度 (SD1.5建议640)")
     parser.add_argument("--height", type=int, default=960, help="高度 (SD1.5建议960)")
@@ -271,10 +272,10 @@ def main():
     elif args.preset in PRESETS:
         preset_data = PRESETS[args.preset]
         composer.apply_preset(preset_data)
-        if args.random:
-            prompt = composer.compose_random()
+        if args.fixed:
+            prompt = composer.compose_by_index(0)   # 可改为支持索引参数
         else:
-            prompt = composer.compose_by_index(0)
+            prompt = composer.compose_random()
     else:
         print("❌ 未知预设！请使用 --list-presets 查看")
         return

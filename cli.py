@@ -108,6 +108,7 @@ def main():
     parser.add_argument("-n", "--count", type=int, default=1, help="生成数量")
     parser.add_argument("--seed", type=int, default=None, help="随机种子 (后续递增)")
     parser.add_argument("--random", action="store_true", help="随机组合 (否则按索引轮询)")
+    parser.add_argument("--fixed", action="store_true", help="固定索引轮询（默认随机组合）")
     parser.add_argument("--steps", type=int, default=DEFAULT_STEPS, help="迭代步数")
     parser.add_argument("--cfg", type=float, default=DEFAULT_CFG, help="CFG 值")
     parser.add_argument("--width", type=int, default=DEFAULT_WIDTH, help="宽度")
@@ -400,12 +401,12 @@ def main():
             print("❌ 错误: 没有任何层数据，请检查 layers/ 目录")
             return
 
-        if args.random:
-            for _ in range(args.count):
-                prompts.append(composer.compose_random(max_tokens=MAX_TOKENS))
-        else:
+        if args.fixed:
             for i in range(args.count):
                 prompts.append(composer.compose_by_index(i, max_tokens=MAX_TOKENS))
+        else:
+            for _ in range(args.count):
+                prompts.append(composer.compose_random(max_tokens=MAX_TOKENS))
 
         print("\n📝 生成的提示词:")
         for idx, p in enumerate(prompts):
