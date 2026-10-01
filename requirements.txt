@@ -24,3 +24,11 @@ python-dotenv >= 1.0.0
 
 # Word 文档生成需要（可选）
 python-docx >= 1.0.0            
+
+# ========== GUI 支持 ==========
+gradio>=4.0.0          # Gradio Web GUI
+
+# ========== PWA 支持 ==========
+fastapi>=0.100.0       # 高性能 Web 框架
+uvicorn>=0.23.0        # ASGI 服务器
+python-multipart>=0.0.6 # 文件上传支持 (如果需要)
